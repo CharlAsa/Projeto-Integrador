@@ -102,6 +102,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "items" => [
                                                         ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
                                                         ["label" => "Ver consultas", "url" => ["consulta/secretarioverconsulta"]],
+                                                        ["label" => "Cadastrar usuário", "url" => ["usuario/create"]],
                                                     ],
                                                 ]
                                             )
