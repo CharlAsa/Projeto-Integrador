@@ -31,24 +31,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true])->label('Senha') ?>
 
-
-	<?= $form->field($model2, 'numero_telefone')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model2, 'email')->textarea(['rows' => 6]) ?>
-
-
-	<?= $form->field($model3, 'logradouro')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model3, 'bairro')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model3, 'cidade')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model3, 'uf')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model3, 'cep')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model3, 'numero_casa')->textInput(['maxlength' => true]) ?>
-
     <?= yii\base\View::render('@app/views/endereco/_endereco.php', ['model' => $arrayEndereco, 'form' => $form]) ?>
 
     <?= yii\base\View::render('@app/views/contato/_contato.php', ['model' => $arrayContato, 'form' => $form]) ?>
