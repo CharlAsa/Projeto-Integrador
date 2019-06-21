@@ -37,8 +37,8 @@ class Consulta extends \yii\db\ActiveRecord
             [['id_paciente', 'id_medico'], 'integer'],
             [['data_consulta'], 'safe'],
             [['estado'], 'string', 'max' => 1],
-            [['id_paciente'], 'exist', 'skipOnError' => true, 'targetClass' => Paciente::className(), 'targetAttribute' => ['id_paciente' => 'id_usuario']],
-            [['id_medico'], 'exist', 'skipOnError' => true, 'targetClass' => Medico::className(), 'targetAttribute' => ['id_medico' => 'id_usuario']],
+            [['id_paciente'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['id_paciente' => 'id']],
+            [['id_medico'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['id_medico' => 'id']],
 			[['horario'], 'string', 'max' => 5],
 		];
     }
