@@ -71,67 +71,8 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                         \yiister\gentelella\widgets\Menu::widget(
                             [
                                 "items" => [
-                                    ["label" => "Home", "url" => ['/site/index'], "icon" => "home"],
-                                    ["label" => "Layout", "url" => ["site/layout"], "icon" => "files-o"],
-                                    ["label" => "Error page", "url" => ["site/error-page"], "icon" => "close"],
-                                    [
-                                        "label" => "Widgets",
-                                        "icon" => "th",
-                                        "url" => "#",
-                                        "items" => [
-                                            ["label" => "Menu", "url" => ["site/menu"]],
-                                            ["label" => "Panel", "url" => ["site/panel"]],
-                                        ],
-                                    ],
-                                    [
-                                        "label" => "Badges",
-                                        "url" => "#",
-                                        "icon" => "table",
-                                        "items" => [
-                                            [
-                                                "label" => "Default",
-                                                "url" => "#",
-                                                "badge" => "123",
-                                            ],
-                                            [
-                                                "label" => "Success",
-                                                "url" => "#",
-                                                "badge" => "new",
-                                                "badgeOptions" => ["class" => "label-success"],
-                                            ],
-                                            [
-                                                "label" => "Danger",
-                                                "url" => "#",
-                                                "badge" => "!",
-                                                "badgeOptions" => ["class" => "label-danger"],
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        "label" => "Multilevel",
-                                        "url" => "#",
-                                        "icon" => "table",
-                                        "items" => [
-                                            [
-                                                "label" => "Second level 1",
-                                                "url" => "#",
-                                            ],
-                                            [
-                                                "label" => "Second level 2",
-                                                "url" => "#",
-                                                "items" => [
-                                                    [
-                                                        "label" => "Third level 1",
-                                                        "url" => "#",
-                                                    ],
-                                                    [
-                                                        "label" => "Third level 2",
-                                                        "url" => "#",
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
+                                    ["label" => "Página Inicial", "url" => ['/site/index'], "icon" => "home"],
+                                    
                                     Yii::$app->user->isGuest == false ? (
                                         Yii::$app->user->identity->id_Yii == 4 ? (
                                             [
@@ -140,7 +81,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                 "url" => "#",
                                                 "items" => [
                                                     ["label" => "Agendar consulta", "url" => ["consulta/medicoagendaconsulta"]],
-                                                    ["label" => "Calendário de Consulta", "url" => ["consulta/verconsulta"]],
+                                                    ["label" => "Ver todas as consultas", "url" => ["consulta/medicoverconsulta"]],
                                                 ],
                                             ]
                                         ) : (
@@ -150,8 +91,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "icon" => "user",
                                                     "url" => "#",
                                                     "items" => [
-                                                        ["label" => "Ver consulta", "url" => ["consulta/verconsulta"]],
-                                                        ["label" => "Panel", "url" => ["site/panel"]],
+                                                        ["label" => "Ver consultas", "url" => ["consulta/verconsulta"]],
                                                     ],
                                                 ]
                                             ) : (
@@ -161,7 +101,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "url" => "#",
                                                     "items" => [
                                                         ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
-                                                        ["label" => "Panel", "url" => ["site/panel"]],
+                                                        ["label" => "Ver consultas", "url" => ["consulta/secretarioverconsulta"]],
                                                     ],
                                                 ]
                                             )
@@ -183,19 +123,9 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
 
                 <!-- /menu footer buttons -->
                 <div class="sidebar-footer hidden-small">
-                    <a data-toggle="tooltip" data-placement="top" title="Settings">
-                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Lock">
-                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                    </a>
                     <a data-toggle="tooltip" data-placement="top" title="Logout" url= <?= Url::to(['site/logout'])?> data-method='POST'>
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
-                    <?php echo Html::a('<span class="glyphicon glyphicon-off" aria-hidden="true"></span>'.'', Url::to(['site/logout']), ['data-method' => 'POST']); ?>
                 </div>
                 <!-- /menu footer buttons -->
             </div>
@@ -259,78 +189,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                             </ul>
                         </li>
 
-                        <li role="presentation" class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="badge bg-green">6</span>
-                            </a>
-                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                <li>
-                                    <a>
-                      <span class="image">
-                                        <img src="http://placehold.it/128x128" alt="Profile Image" />
-                                    </span>
-                      <span>
-                                        <span>John Smith</span>
-                      <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                      <span class="image">
-                                        <img src="http://placehold.it/128x128" alt="Profile Image" />
-                                    </span>
-                      <span>
-                                        <span>John Smith</span>
-                      <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                      <span class="image">
-                                        <img src="http://placehold.it/128x128" alt="Profile Image" />
-                                    </span>
-                      <span>
-                                        <span>John Smith</span>
-                      <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                      <span class="image">
-                                        <img src="http://placehold.it/128x128" alt="Profile Image" />
-                                    </span>
-                      <span>
-                                        <span>John Smith</span>
-                      <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="text-center">
-                                        <a href="/">
-                                            <strong>See All Alerts</strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                        
 
                     </ul>
                 </nav>
@@ -364,13 +223,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
         </div>
         <!-- /page content -->
         <!-- footer content -->
-        <footer>
-            <div class="pull-right">
-                Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com" rel="nofollow" target="_blank">Colorlib</a><br />
-                Extension for Yii framework 2 by <a href="http://yiister.ru" rel="nofollow" target="_blank">Yiister</a>
-            </div>
-            <div class="clearfix"></div>
-        </footer>
+
         <!-- /footer content -->
     </div>
 
