@@ -54,6 +54,58 @@ $this->registerJs(
             'access_token_Yii',
             'id_Yii',
 			'nome',
+            [
+                'attribute' => 'Número Telefone',
+                'value' => function($data){
+                    return Usuario::getContatoTelefone($data->id);
+                },
+            ],
+
+            [
+                'attribute' => 'E-mail',
+                'value' => function($data){
+                    return Usuario::getContatoEmail($data->id);
+                },
+            ],
+
+            [
+                'attribute' => 'Logradouro',
+                'value' => function($data){
+                    return Usuario::getEnderecoLogradouro($data->id);
+                },
+            ],
+            
+            [
+                'attribute' => 'Bairro',
+                'value' => function($data){
+                    return Usuario::getEnderecoBairro($data->id);
+                },
+            ],
+            [
+                'attribute' => 'Cidade',
+                'value' => function($data){
+                    return Usuario::getEnderecoCidade($data->id);
+                },
+            ],
+            [
+                'attribute' => 'UF',
+                'value' => function($data){
+                    return Usuario::getEnderecoUf($data->id);
+                },
+            ],
+            [
+                'attribute' => 'CEP',
+                'value' => function($data){
+                    return Usuario::getEnderecoCep($data->id);
+                },
+            ],
+
+            [
+                'attribute' => 'Número Casa',
+                'value' => function($data){
+                    return Usuario::getEnderecoNumeroCasa($data->id);
+                },
+            ],
         ],
     ]) ?>
 		<?= Html::a("Show Time", ['usuario/view','id'=>$model->id], ['class' => 'btn btn-lg btn-primary', 'id'=>'vvv']) ?>

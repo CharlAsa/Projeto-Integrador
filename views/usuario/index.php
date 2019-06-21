@@ -37,6 +37,48 @@ $this->params['breadcrumbs'][] = $this->title;
             //'auth_key_Yii',
             //'access_token_Yii',
             //'id_Yii',
+            [
+                'attribute' => 'numerotelefone',
+                'label' => 'Número Telefone',
+                //'format' => 'raw',
+                'value' => function($data){
+                    //return Html::a(Escoteiro::getContatoTelefone($data->idescoteiro), ['site/index']);
+
+                    return Usuario::getContatoTelefone($data->id);
+                },
+            ],
+            [
+                'attribute' => 'email',
+                'label' => 'E-mail',
+                'value' => function($data){
+                    return Usuario::getContatoEmail($data->id);
+                },
+            ],
+
+            [
+                'attribute' => 'logradouro',
+                'label' => 'Logradouro',
+                'value' => function($data){
+                    return Usuario::getEnderecoLogradouro($data->id);
+                },
+            ],
+            
+            [
+                'attribute' => 'bairro',
+                'label' => 'Bairro',
+                'value' => function($data){
+                    return Usuario::getEnderecoBairro($data->id);
+                },
+            ],
+
+            [
+                'attribute' => 'numerocasa',
+                'label' => 'Número da Casa',
+                'value' => function($data){
+                    return Usuario::getEnderecoNumeroCasa($data->id);
+                },
+            ],
+
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

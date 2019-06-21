@@ -49,6 +49,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model3, 'numero_casa')->textInput(['maxlength' => true]) ?>
 
+    <?= yii\base\View::render('@app/views/endereco/_endereco.php', ['model' => $arrayEndereco, 'form' => $form]) ?>
+
+    <?= yii\base\View::render('@app/views/contato/_contato.php', ['model' => $arrayContato, 'form' => $form]) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

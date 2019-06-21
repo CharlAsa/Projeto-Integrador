@@ -76,13 +76,27 @@ class UsuarioController extends Controller
     public function actionCreate()
     {
         $model = new Usuario();
+        $arrayEndereco = new Endereco();
+        $arrayContato = new Contato();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())) {
+            if($model->save())
+            {
+                $arrayContato->id_usuario = $model->id; 
+                $arrayEndereco->id_usuario = $model->id;
+
+
+                if($arrayContato->save() && $arrayEndereco->save())
+                {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'arrayEndereco' => $arrayEndereco,
+            'arrayContato' => $arrayContato,
         ]);
     }
 
@@ -95,14 +109,40 @@ class UsuarioController extends Controller
      */
     public function actionUpdate($id)
     {
+        $contato = new Contato();
+        $idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
+        $idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+        $arrayContato = $this->findModelContato($idContato);
+        $arrayEndereco = $this->findModelEndereco($idEndereco);
+
+
+        $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
+
+        if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
+        && $arrayContato->load(Yii::$app->request->post()))
+        {
+
+            $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
+             if($model->save())
+            {
+                $arrayContato->id_usuario = $model->id; 
+                $arrayEndereco->id_usuario = $model->id;
+                if($arrayContato->save() && $arrayEndereco->save())
+                {
+
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
+
 
         return $this->render('update', [
             'model' => $model,
+            'arrayContato' => $arrayContato,
+            'arrayEndereco' => $arrayEndereco,
         ]);
     }
 

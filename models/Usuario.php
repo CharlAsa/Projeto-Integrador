@@ -185,4 +185,73 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
 	public function validatePassword($pass){
 		return $this->password === $pass;
 	}
+
+    public static function getContatoTelefone($id){
+        $model = Contato::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->numero_telefone;
+        }
+    
+        return null;
+    }
+    public static function getContatoEmail($id){
+        $model = Contato::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->email;
+        }
+    
+        return null;
+    }
+
+    public static function getEnderecoLogradouro($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->logradouro;
+        }
+    
+        return null;
+    }
+
+    public static function getEnderecoBairro($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->bairro;
+        }
+    
+        return null;
+    }
+    public static function getEnderecoCidade($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->cidade;
+        }
+    
+        return null;
+    }
+    public static function getEnderecoUf($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->uf;
+        }
+    
+        return null;
+    }
+
+    public static function getEnderecoCep($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->cep;
+        }
+    
+        return null;
+    }
+
+    public static function getEnderecoNumeroCasa($id){
+        $model = Endereco::find()->where(["id_usuario" => $id])->one();
+        if(!empty($model)){
+            return $model->numero_casa;
+        }
+    
+        return null;
+    }
 }
