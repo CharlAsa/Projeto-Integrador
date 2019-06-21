@@ -158,7 +158,7 @@ class UsuarioController extends Controller
 		if(Consulta::find()->where(['id_paciente' =>$id])->one()){
 			throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
 		}
-		Paciente::findOne($id)->delete();
+		//Paciente::findOne($id)->delete();
 		Contato::findOne($id)->delete();
 		Endereco::findOne($id)->delete();
 		//
