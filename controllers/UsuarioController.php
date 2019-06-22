@@ -13,6 +13,8 @@ use app\models\Contato;
 use app\models\ContatoSearch;
 use app\models\Endereco;
 use app\models\EnderecoSearch;
+use app\models\Medico;
+use app\models\MedicoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -78,16 +80,21 @@ class UsuarioController extends Controller
         $model = new Usuario();
         $arrayEndereco = new Endereco();
         $arrayContato = new Contato();
+        $model2 = new Medico();
 
-        if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
             if($model->save())
             {
                 $arrayContato->id_usuario = $model->id; 
                 $arrayEndereco->id_usuario = $model->id;
-
+                $model2->id_usuario = $model->id;
 
                 if($arrayContato->save() && $arrayEndereco->save())
                 {
+                    Yii::trace($model2);
+                    if($model->id_Yii == 4){
+                        $model2->save();
+                    }
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -95,6 +102,7 @@ class UsuarioController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'model2' => $model2,
             'arrayEndereco' => $arrayEndereco,
             'arrayContato' => $arrayContato,
         ]);
@@ -112,8 +120,7 @@ class UsuarioController extends Controller
         $contato = new Contato();
         $idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
         $idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
-        $model = $this->findModel($id);
-
+        $model = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
 
         $arrayContato = $this->findModelContato($idContato);
         $arrayEndereco = $this->findModelEndereco($idEndereco);
@@ -122,7 +129,7 @@ class UsuarioController extends Controller
         $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
 
         if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
-        && $arrayContato->load(Yii::$app->request->post()))
+        && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
         {
 
             $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
@@ -132,7 +139,7 @@ class UsuarioController extends Controller
                 $arrayEndereco->id_usuario = $model->id;
                 if($arrayContato->save() && $arrayEndereco->save())
                 {
-
+                    $model2->save();
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -143,6 +150,7 @@ class UsuarioController extends Controller
             'model' => $model,
             'arrayContato' => $arrayContato,
             'arrayEndereco' => $arrayEndereco,
+            'model2'=>$model2,
         ]);
     }
 
@@ -161,7 +169,10 @@ class UsuarioController extends Controller
 		//Paciente::findOne($id)->delete();
 		Contato::findOne($id)->delete();
 		Endereco::findOne($id)->delete();
-		//
+        $m = Medico::findOne($id);
+        if($m != null){
+            $m->delete();
+        }
 		$this->findModel($id)->delete();
         return $this->redirect(['index']);
     }

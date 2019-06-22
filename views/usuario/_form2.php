@@ -6,7 +6,6 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Usuario */
 /* @var $form yii\widgets\ActiveForm */
-$model2->crm = '0';
 ?>
 
 <div class="usuario-form">
@@ -31,29 +30,6 @@ $model2->crm = '0';
     <?= $form->field($model, 'username')->textInput(['maxlength' => true])->label('Login') ?>
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true])->label('Senha') ?>
-
-    <?= yii\base\View::render('@app/views/endereco/_endereco.php', ['model' => $arrayEndereco, 'form' => $form]) ?>
-
-    <?= yii\base\View::render('@app/views/contato/_contato.php', ['model' => $arrayContato, 'form' => $form]) ?>
-
-    <?= $form->field($model, 'id_Yii')
-        ->dropDownList(
-            ['1' => 'Secretario', '2' => 'Paciente', '4' => 'Doutor'],           // Flat array ('id'=>'label') or $items
-            //['prompt'=>'']    // options
-            ['onchange'=>'
-                if($(this).val() == 4){
-                    document.getElementsByClassName("field-medico-crm required")[0].style.visibility = "visible";
-                    document.getElementById("medico-crm").value = "";
-                }
-                else{
-                    document.getElementsByClassName("field-medico-crm required")[0].style.visibility = "hidden";
-                    document.getElementById("medico-crm").value = "0";
-                }
-            ']
-        );
-    ?>
-
-    <?= $form->field($model2, 'crm', [ 'options' => [ 'style' => 'visibility: hidden;']])->textInput(['maxlength' => true])->label('CRM') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

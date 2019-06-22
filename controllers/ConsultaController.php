@@ -68,16 +68,7 @@ class ConsultaController extends Controller
      */
     public function actionCreate()
     {
-		Yii::trace('Rule');
-		Yii::trace(\Yii::$app->user->can('consulta/create'));
-		
-		if (\Yii::$app->user->can('consulta/create')) {
-			// create post
-			return $this->redirect(['site/index']);
-		}
 		$model = new Consulta();
-
-		//Yii::trace('f');
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->id]);
