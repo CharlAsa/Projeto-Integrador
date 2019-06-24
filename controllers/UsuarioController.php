@@ -255,4 +255,23 @@ class UsuarioController extends Controller
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+    protected function findModelContato($id)
+    {
+        if(($modelContato = Contato::findOne($id)) != null)
+        {
+            return $modelContato;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    protected function findModelEndereco($id)
+    {
+        if(($modelEndereco = Endereco::findOne($id)) != null)
+        {
+            return $modelEndereco;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
 }

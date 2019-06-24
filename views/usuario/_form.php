@@ -21,7 +21,7 @@ $model2->crm = '0';
 
 	<?= $form->field($model, 'sexo')
         ->dropDownList(
-            ['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
+            ['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro']           // Flat array ('id'=>'label') or $items
             //['prompt'=>'']    // options
         ); ?>
 	
@@ -50,7 +50,7 @@ $model2->crm = '0';
                     document.getElementById("medico-crm").value = "0";
                 }
             ']
-        );
+        )->label('Tipo de Usuário');
     ?>
 
     <?= $form->field($model2, 'crm', [ 'options' => [ 'style' => 'visibility: hidden;']])->textInput(['maxlength' => true])->label('CRM') ?>

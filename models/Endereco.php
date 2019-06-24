@@ -36,7 +36,7 @@ class Endereco extends \yii\db\ActiveRecord
             [['id_usuario', 'logradouro', 'bairro', 'cidade', 'uf', 'cep', 'numero_casa'], 'required'],
             [['id_usuario'], 'integer'],
             [['logradouro'], 'string'],
-            [['bairro', 'cidade'], 'string', 'max' => 20],
+            [['bairro', 'cidade'], 'string', 'max' => 40],
             [['uf'], 'string', 'max' => 2],
             [['cep'], 'string', 'max' => 7],
             [['numero_casa'], 'string', 'max' => 4],
