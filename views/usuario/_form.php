@@ -6,7 +6,9 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Usuario */
 /* @var $form yii\widgets\ActiveForm */
-$model2->crm = '0';
+if($model2->crm == null){
+    $model2->crm = '0';
+}
 ?>
 
 <div class="usuario-form">
@@ -53,7 +55,7 @@ $model2->crm = '0';
         )->label('Tipo de Usuário');
     ?>
 
-    <?= $form->field($model2, 'crm', [ 'options' => [ 'style' => 'visibility: hidden;']])->textInput(['maxlength' => true])->label('CRM') ?>
+    <?= $form->field($model2, 'crm',  $model2->crm == '0' ? [ 'options' => [ 'style' => 'visibility: hidden;']] : [ 'options' => [ 'style' => 'visibility: visible;']] )->textInput(['maxlength' => true])->label('CRM') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

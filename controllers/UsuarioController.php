@@ -119,13 +119,17 @@ class UsuarioController extends Controller
     public function actionUpdate($id)
     {
         $model = Usuario::findOne($id);
-        $contato = new Contato();
-        $idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
-        $idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
-        $model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
+        //$contato = new Contato();
+        //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
+        //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
+        //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
 
-        $arrayContato = $this->findModelContato($idContato);
-        $arrayEndereco = $this->findModelEndereco($idEndereco);
+        //$arrayContato = $this->findModelContato($idContato);
+        //$arrayEndereco = $this->findModelEndereco($idEndereco);
+
+        $model2 = Medico::findOne($id);
+        $arrayContato = Contato::findOne($id);
+        $arrayEndereco = Endereco::findOne($id);
 
 
         $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
