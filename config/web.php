@@ -11,33 +11,10 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
 		
-		//'@mdm/admin' => '@app/extensions/mdm/yii2-admin-2.0.0',
-		//'@mdm/admin' => '@app/vendor/mdmsoft/yii2-admin',
-        // for example: '@mdm/admin' => '@app/extensions/mdm/yii2-admin-2.0.0',
     ],
-	
-	//Adicionado
-	'modules' => [
-        'admin' => [
-            'class' => 'mdm\admin\Module',
-        ]
-    ],
-	//'as access' => [
-    //   'class' => 'mdm\admin\components\AccessControl',
-    //    'allowActions' => [
-    //        'admin/*', // add or remove allowed actions to this list
-	//		'site/*',
-    //    ]
-	//],
 	
 	
     'components' => [
-		//Adicionado
-	//	'authManager' => [
-    //       'class' => 'yii\rbac\DbManager',
-            // uncomment if you want to cache RBAC items hierarchy
-            // 'cache' => 'cache',
-    //    ],
 		
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -84,15 +61,6 @@ $config = [
                 ],
             ],
         ],
-
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
     ],
     'params' => $params,
 ];
