@@ -62,28 +62,24 @@ $this->title = 'My Yii Application';
 
     <div class="body-content">
 
-        <div class="row">
+        <div id = "topo" class="row">
             <div class="col-lg-4">
-                <h2>Heading</h2>
 
-                <p>aa.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>aa.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+                
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>aa.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+                
             </div>
+        </div>
+
+        <div id="conteudo" class="row">
+            
+        </div>
+
+        <div id="rodape" class="row">
+            
         </div>
 
     </div>
