@@ -35,13 +35,21 @@ class ContatoController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ContatoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2)
+			{
+                $searchModel = new ContatoSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
     }
 
     /**
@@ -52,9 +60,18 @@ class ContatoController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2)
+			{
+                return $this->render('view', [
+                    'model' => $this->findModel($id),
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
+
     }
 
     /**
@@ -64,15 +81,23 @@ class ContatoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Contato();
+        if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2)
+			{
+                $model = new Contato();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id_usuario]);
+                }
+
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -84,15 +109,23 @@ class ContatoController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2)
+			{
+                $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_usuario]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id_usuario]);
+                }
+
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -104,9 +137,17 @@ class ContatoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2)
+			{
+                $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+                return $this->redirect(['index']);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
     }
 
     /**
