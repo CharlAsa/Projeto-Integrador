@@ -50,6 +50,9 @@ class ContatoController extends Controller
                 throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
             }
         }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -71,7 +74,9 @@ class ContatoController extends Controller
                 throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
             }
         }
-
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -98,6 +103,9 @@ class ContatoController extends Controller
                 throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
             }
         }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -126,6 +134,9 @@ class ContatoController extends Controller
                 throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
             }
         }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -148,6 +159,9 @@ class ContatoController extends Controller
                 throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
             }
         }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**

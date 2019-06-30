@@ -92,6 +92,9 @@ class ConsultaController extends Controller
 				]);
 			}
 		}
+		else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -124,6 +127,9 @@ class ConsultaController extends Controller
 				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
 			}
 		}
+		else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -149,6 +155,9 @@ class ConsultaController extends Controller
 			else{
 				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
 			}
+		}
+		else{
+			return $this->redirect(['site/login']);
 		}
     }
 	
