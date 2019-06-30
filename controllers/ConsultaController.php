@@ -39,13 +39,15 @@ class ConsultaController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ConsultaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		if(!Yii::$app->user->isGuest){
+			$searchModel = new ConsultaSearch();
+			$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+			return $this->render('index', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+			]);
+		}
     }
 
     /**
@@ -54,11 +56,19 @@ class ConsultaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($id = null)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+		if(!Yii::$app->user->isGuest){
+			if($id == null){
+				return $this->redirect(['index']);
+			}
+			return $this->render('view', [
+				'model' => $this->findModel($id),
+			]);
+		}
+		else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -68,15 +78,20 @@ class ConsultaController extends Controller
      */
     public function actionCreate()
     {
-		$model = new Consulta();
+		if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 999)
+			{
+				$model = new Consulta();
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->id]);
+				if ($model->load(Yii::$app->request->post()) && $model->save()) {
+					return $this->redirect(['view', 'id' => $model->id]);
+				}
+
+				return $this->render('create', [
+					'model' => $model,
+				]);
+			}
 		}
-
-		return $this->render('create', [
-			'model' => $model,
-		]);
     }
 
     /**
@@ -86,17 +101,29 @@ class ConsultaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id = null)
     {
-        $model = $this->findModel($id);
+		if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii != 2)
+			{
+				if($id == null){
+					return $this->redirect(['index']);
+				}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+				$model = $this->findModel($id);
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+				if ($model->load(Yii::$app->request->post()) && $model->save()) {
+					return $this->redirect(['view', 'id' => $model->id]);
+				}
+
+				return $this->render('update', [
+					'model' => $model,
+				]);
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+		}
     }
 
     /**
@@ -106,11 +133,23 @@ class ConsultaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id = null)
     {
-        $this->findModel($id)->delete();
+		if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii != 2)
+			{
+				if($id == null){
+					return $this->redirect(['index']);
+				}
 
-        return $this->redirect(['index']);
+				$this->findModel($id)->delete();
+
+				return $this->redirect(['index']);
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+		}
     }
 	
 	/**
@@ -232,6 +271,7 @@ class ConsultaController extends Controller
 					//$model->id_medico = Yii::$app->user->identity->id;
 					$model->estado = 'a';
 
+
 					//checa se existe outra consulta do paciente no mesmo horário
 					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
 
@@ -248,7 +288,7 @@ class ConsultaController extends Controller
 						}
 					}
 					else{
-						return $this->redirect('index');
+						return $this->redirect(['index']);
 					}
 				}
 
