@@ -36,7 +36,7 @@ class EnderecoController extends Controller
     public function actionIndex()
     {
         if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 2)
+			if(Yii::$app->user->identity->id_Yii == 1)
 			{
                 $searchModel = new EnderecoSearch();
                 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -64,7 +64,7 @@ class EnderecoController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 2)
+			if(Yii::$app->user->identity->id_Yii == 1)
 			{
                 return $this->render('view', [
                     'model' => $this->findModel($id),
@@ -87,7 +87,7 @@ class EnderecoController extends Controller
     public function actionCreate()
     {
         if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 2)
+			if(Yii::$app->user->identity->id_Yii == 1)
 			{
                 $model = new Endereco();
 
@@ -118,7 +118,7 @@ class EnderecoController extends Controller
     public function actionUpdate($id)
     {
         if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 2)
+			if(Yii::$app->user->identity->id_Yii == 1)
 			{
                 $model = $this->findModel($id);
 
@@ -149,7 +149,7 @@ class EnderecoController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 2)
+			if(Yii::$app->user->identity->id_Yii == 1)
 			{
                 $this->findModel($id)->delete();
 
