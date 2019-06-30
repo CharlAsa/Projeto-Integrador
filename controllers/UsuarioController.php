@@ -29,7 +29,6 @@ class UsuarioController extends Controller
     /**
      * {@inheritdoc}
      */
-    //
     public function behaviors()
     {
         return [
@@ -48,13 +47,18 @@ class UsuarioController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UsuarioSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(!Yii::$app->user->isGuest){
+            $searchModel = new UsuarioSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -65,10 +69,15 @@ class UsuarioController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-			'response' => date('H:i:s'),
-        ]);
+        if(!Yii::$app->user->isGuest){
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+                'response' => date('H:i:s'),
+            ]);
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -78,35 +87,40 @@ class UsuarioController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Usuario();
-        $arrayEndereco = new Endereco();
-        $arrayContato = new Contato();
-        $model2 = new Medico();
+        if(!Yii::$app->user->isGuest){
+            $model = new Usuario();
+            $arrayEndereco = new Endereco();
+            $arrayContato = new Contato();
+            $model2 = new Medico();
 
-        if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
-            if($model->save())
-            {
-                $arrayContato->id_usuario = $model->id; 
-                $arrayEndereco->id_usuario = $model->id;
-                $model2->id_usuario = $model->id;
-
-                if($arrayContato->save() && $arrayEndereco->save())
+            if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
+                if($model->save())
                 {
-                    Yii::trace($model2);
-                    if($model->id_Yii == 4){
-                        $model2->save();
+                    $arrayContato->id_usuario = $model->id; 
+                    $arrayEndereco->id_usuario = $model->id;
+                    $model2->id_usuario = $model->id;
+
+                    if($arrayContato->save() && $arrayEndereco->save())
+                    {
+                        Yii::trace($model2);
+                        if($model->id_Yii == 4){
+                            $model2->save();
+                        }
+                        return $this->redirect(['view', 'id' => $model->id]);
                     }
-                    return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-            'model2' => $model2,
-            'arrayEndereco' => $arrayEndereco,
-            'arrayContato' => $arrayContato,
-        ]);
+            return $this->render('create', [
+                'model' => $model,
+                'model2' => $model2,
+                'arrayEndereco' => $arrayEndereco,
+                'arrayContato' => $arrayContato,
+            ]);
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -118,46 +132,48 @@ class UsuarioController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = Usuario::findOne($id);
-        //$contato = new Contato();
-        //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
-        //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
-        //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
-
-        //$arrayContato = $this->findModelContato($idContato);
-        //$arrayEndereco = $this->findModelEndereco($idEndereco);
-
-        $model2 = Medico::findOne($id);
-        $arrayContato = Contato::findOne($id);
-        $arrayEndereco = Endereco::findOne($id);
+        if(!Yii::$app->user->isGuest){
+            $model = Usuario::findOne($id);
+            //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
+            //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
+            //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
+            $model2 = Medico::findOne($id);
+            $arrayContato = Contato::findOne($id);
+            $arrayEndereco = Endereco::findOne($id);
+            //$arrayContato = $this->findModelContato($idContato);
+            //$arrayEndereco = $this->findModelEndereco($idEndereco);
 
 
-        $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
+            $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
 
-        if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
-        && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
-        {
-
-            $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
-             if($model->save())
+            if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
+            && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
             {
-                $arrayContato->id_usuario = $model->id; 
-                $arrayEndereco->id_usuario = $model->id;
-                if($arrayContato->save() && $arrayEndereco->save())
+
+                $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
+                if($model->save())
                 {
-                    $model2->save();
-                    return $this->redirect(['view', 'id' => $model->id]);
+                    $arrayContato->id_usuario = $model->id; 
+                    $arrayEndereco->id_usuario = $model->id;
+                    if($arrayContato->save() && $arrayEndereco->save())
+                    {
+                        $model2->save();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
                 }
             }
+
+
+            return $this->render('update', [
+                'model' => $model,
+                'arrayContato' => $arrayContato,
+                'arrayEndereco' => $arrayEndereco,
+                'model2'=>$model2,
+            ]);
         }
-
-
-        return $this->render('update', [
-            'model' => $model,
-            'arrayContato' => $arrayContato,
-            'arrayEndereco' => $arrayEndereco,
-            'model2'=>$model2,
-        ]);
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -169,18 +185,23 @@ class UsuarioController extends Controller
      */
     public function actionDelete($id)
     {
-		if(Consulta::find()->where(['id_paciente' =>$id])->one()){
-			throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
-		}
-		//Paciente::findOne($id)->delete();
-		Contato::findOne($id)->delete();
-		Endereco::findOne($id)->delete();
-        $m = Medico::findOne($id);
-        if($m != null){
-            $m->delete();
+        if(!Yii::$app->user->isGuest){
+            if(Consulta::find()->where(['id_paciente' =>$id])->one()){
+                throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
+            }
+            //Paciente::findOne($id)->delete();
+            Contato::findOne($id)->delete();
+            Endereco::findOne($id)->delete();
+            $m = Medico::findOne($id);
+            if($m != null){
+                $m->delete();
+            }
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
         }
-		$this->findModel($id)->delete();
-        return $this->redirect(['index']);
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 	
 	/**
@@ -256,25 +277,6 @@ class UsuarioController extends Controller
     {
         if (($model = Usuario::findOne($id)) !== null) {
             return $model;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-    protected function findModelContato($id)
-    {
-        if(($modelContato = Contato::findOne($id)) != null)
-        {
-            return $modelContato;
-        }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
-
-    protected function findModelEndereco($id)
-    {
-        if(($modelEndereco = Endereco::findOne($id)) != null)
-        {
-            return $modelEndereco;
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
