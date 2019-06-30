@@ -128,8 +128,24 @@ class ConsultaController extends Controller
 				if ($model->load(Yii::$app->request->post())) {
 					$model->id_medico = Yii::$app->user->identity->id;
 					$model->estado = 'a';
-					if($model->save()){
-						return $this->redirect(['view', 'id' => $model->id]);
+
+					//checa se existe outra consulta do paciente no mesmo horário
+					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
+
+					$c = (new \yii\db\Query())
+					->from('consulta')
+					->where(['id_medico' => $model->id_medico])
+					->andWhere(['id_paciente'=>$model->id_paciente])
+					->andWhere(['between', 'data_consulta', $aux, $aux])
+					->andWhere(['horario'=>$model->horario])
+					->count();
+					if($c == 0){
+						if($model->save()){
+							return $this->redirect(['view', 'id' => $model->id]);
+						}
+					}
+					else{
+						return $this->redirect('index');
 					}
 				}
 
@@ -215,8 +231,24 @@ class ConsultaController extends Controller
 				if ($model->load(Yii::$app->request->post())) {
 					//$model->id_medico = Yii::$app->user->identity->id;
 					$model->estado = 'a';
-					if($model->save()){
-						return $this->redirect(['view', 'id' => $model->id]);
+
+					//checa se existe outra consulta do paciente no mesmo horário
+					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
+
+					$c = (new \yii\db\Query())
+					->from('consulta')
+					->where(['id_medico' => $model->id_medico])
+					->andWhere(['id_paciente'=>$model->id_paciente])
+					->andWhere(['between', 'data_consulta', $aux, $aux])
+					->andWhere(['horario'=>$model->horario])
+					->count();
+					if($c == 0){
+						if($model->save()){
+							return $this->redirect(['view', 'id' => $model->id]);
+						}
+					}
+					else{
+						return $this->redirect('index');
 					}
 				}
 
