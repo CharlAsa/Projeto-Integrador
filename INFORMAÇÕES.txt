@@ -7,3 +7,5 @@ Consulta:
         create - ninguém, tem que ser removido depois
 	      update - usuario autenticado, medico ou secretario, caso seja paciente dára um not found, aceita consulta/update só que vai para o index
 	      delete - usuário autenticado, medico ou secretário, caso seja paciente dará um not found, aceita consulta/delete só que vai para o index
+Medico: somente usuario autenticado
+Usuario: somente usuário autenticado
