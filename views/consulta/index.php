@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Nome do Médico',
                 'format' => 'ntext',
-                'attribute'=>'nomemedico',
+                'attribute'=>'nome',
                 'value' => function($model) {
                     return $model->medico->nome;
                 },
