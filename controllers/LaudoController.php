@@ -36,13 +36,19 @@ class LaudoController extends Controller
     public function actionIndex()
     {
         if(!Yii::$app->user->isGuest){
-            $searchModel = new LaudoSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                $searchModel = new LaudoSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -58,9 +64,15 @@ class LaudoController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->isGuest){
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                return $this->render('view', [
+                    'model' => $this->findModel($id),
+                ]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -75,15 +87,21 @@ class LaudoController extends Controller
     public function actionCreate()
     {
         if(!Yii::$app->user->isGuest){
-            $model = new Laudo();
+            if(Yii::$app->user->identity->id_Yii != 2)
+			{
+                $model = new Laudo();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_consulta]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id_consulta]);
+                }
+
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -100,15 +118,21 @@ class LaudoController extends Controller
     public function actionUpdate($id)
     {
         if(!Yii::$app->user->isGuest){
-            $model = $this->findModel($id);
+            if(Yii::$app->user->identity->id_Yii != 2)
+			{
+                $model = $this->findModel($id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_consulta]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id_consulta]);
+                }
+
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
             }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -125,9 +149,15 @@ class LaudoController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->isGuest){
-            $this->findModel($id)->delete();
+            if(Yii::$app->user->identity->id_Yii != 2)
+			{
+                $this->findModel($id)->delete();
 
-            return $this->redirect(['index']);
+                return $this->redirect(['index']);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
