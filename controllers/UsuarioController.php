@@ -72,7 +72,6 @@ class UsuarioController extends Controller
         if(!Yii::$app->user->isGuest){
             return $this->render('view', [
                 'model' => $this->findModel($id),
-                'response' => date('H:i:s'),
             ]);
         }
         else{

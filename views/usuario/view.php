@@ -14,6 +14,17 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
+$this->registerJs(
+    "
+		//setInterval(click, 1000);
+
+		function click()
+		{
+			$('#vvv').click();
+		}
+	",
+);
+
 ?>
 <div class="usuario-view">
 
@@ -29,7 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-	<?php Pjax::begin(['timeout'=>false, 'id'=>'a']) ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -99,7 +109,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]) ?>
-		<?= Html::a("Show Time", ['usuario/view','id'=>$model->id], ['class' => 'btn btn-lg btn-primary', 'id'=>'vvv']) ?>
-		<h1>It's: <?= $response ?></h1>
-	<?php Pjax::end() ?>
 </div>
