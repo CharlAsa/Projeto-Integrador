@@ -37,7 +37,9 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
 
-                
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Gentellela Alela!</span></a>
+                </div>
                 <div class="clearfix"></div>
 
                 <!-- menu prile quick info -->
@@ -79,7 +81,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                 "url" => "#",
                                                 "items" => [
                                                     ["label" => "Agendar consulta", "url" => ["consulta/medicoagendaconsulta"]],
-                                                    ["label" => "Ver todas as consultas", "url" => ["consulta/medicoverconsulta"]],
+                                                    ["label" => "Ver todas as consultas", "url" => ["consulta/index"]],
                                                 ],
                                             ]
                                         ) : (
@@ -89,7 +91,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "icon" => "user",
                                                     "url" => "#",
                                                     "items" => [
-                                                        ["label" => "Ver consultas", "url" => ["consulta/verconsulta"]],
+                                                        ["label" => "Ver consultas", "url" => ["consulta/index"]],
                                                     ],
                                                 ]
                                             ) : (
@@ -99,7 +101,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "url" => "#",
                                                     "items" => [
                                                         ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
-                                                        ["label" => "Ver consultas", "url" => ["consulta/secretarioverconsulta"]],
+                                                        ["label" => "Ver consultas", "url" => ["consulta/index"]],
                                                         ["label" => "Cadastrar usuário", "url" => ["usuario/create"]],
                                                     ],
                                                 ]

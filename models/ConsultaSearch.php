@@ -71,9 +71,13 @@ class ConsultaSearch extends Consulta
         ->andFilterWhere(['like', 'nome', $this->nomemedico]);
 
         if(!Yii::$app->user->isGuest){
-            if(Yii::$app->user->identity->id_Yii == 4)
+            $id = Yii::$app->user->identity->id_Yii;
+            if($id == 4)
             {
                 $query->andFilterWhere(['id_medico' => Yii::$app->user->identity->id]);
+            }
+            else if($id == 2){
+                $query->andFilterWhere(['id_paciente' => Yii::$app->user->identity->id]);
             }
         }
 
