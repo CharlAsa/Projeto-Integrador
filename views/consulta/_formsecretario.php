@@ -14,8 +14,6 @@ use kartik\date\DatePicker;
 
 <div class="consulta-form">
 
-	<!-- pjax aqui -->
-
     <?php $form = ActiveForm::begin(); ?>
 
 	<?= 
@@ -42,35 +40,12 @@ use kartik\date\DatePicker;
 		->label('Nome do Paciente')
 	?>
 
-    <!-- $form->field($model, 'data_consulta')->widget(\yii\widgets\MaskedInput::className(), [
-    'mask' => '99/99/9999',
-	'options' => [
-			'onchange'=>'
-				var k = document.getElementById("aff");
-				k.dataset.params =
-				"{"
-				+"\"param1\":"
-				+"\""
-				+$(this).val()
-				+"\""
-				+",\"param2\":2"
-				+"}";
-				
-				document.getElementById("aff").click();
-			'
-		]
-	])
-	->label('Data da consulta') -->
+
 	
 	
 	<?=
 		
-		$form->field($model, 'data_consulta')->widget(DatePicker::className(), [
-		
-			//'model' => $model, 
-			//'attribute' => 'data_consulta',
-			//'type' => DatePicker::TYPE_INPUT,
-			
+		$form->field($model, 'data_consulta')->widget(DatePicker::className(), [			
 			'language' => 'pt',
 			'options' => [
 				'placeholder' => 'Escolha a data da consulta...',
@@ -166,7 +141,7 @@ use kartik\date\DatePicker;
 				}
 			}
 		',
-		'id'=>'radiodafuq']
+		'id'=>'radiodafuq'],
 		)
 	?>	
 
@@ -197,7 +172,7 @@ use kartik\date\DatePicker;
 	?>
 
 	<?= Html::a('', 
-	['consulta/medicoagendaconsulta'], [
+	['consulta/secretarioagendaconsulta'], [
 	'data-method' => 'POST',
 	'data-params' => [
 		'param1' => 1,

@@ -26,11 +26,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'id_paciente',
-            'id_medico',
             'data_consulta',
             'estado',
+
+            [
+                'label' => 'Nome do Paciente',
+                'format' => 'ntext',
+                'attribute'=>'nome',
+                'value' => function($model) {
+                    return $model->paciente->nome;
+                },
+            ],
+
+            [
+                'label' => 'Nome do Médico',
+                'format' => 'ntext',
+                'attribute'=>'nomemedico',
+                'value' => function($model) {
+                    return $model->medico->nome;
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

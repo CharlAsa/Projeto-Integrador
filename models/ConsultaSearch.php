@@ -13,6 +13,8 @@ use app\models\Usuario;
  */
 class ConsultaSearch extends Consulta
 {
+    public $nome;
+    public $nomemedico;
     /**
      * {@inheritdoc}
      */
@@ -20,7 +22,7 @@ class ConsultaSearch extends Consulta
     {
         return [
             [['id', 'id_paciente', 'id_medico'], 'integer'],
-            [['data_consulta', 'estado', 'horario'], 'safe'],
+            [['data_consulta', 'estado', 'horario', 'nome', 'nomemedico'], 'safe'],
         ];
     }
 
@@ -40,32 +42,19 @@ class ConsultaSearch extends Consulta
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $con = null)
+    public function search($params)
     {
-        $query = Consulta::find();
-
-        // add conditions that should always apply here
-        /*
-        if($con != null){
-            $id = Yii::$app->user->identity->id;
-            $query->innerJoin('medico','medico.id_usuario=consulta.id')
-            ->innerJoin('usuario','usuario.id=medico.id_usuario')
-            ->where('usuario.id='.$id)
-            ->select('usuario.cpf, consulta.*')
-            //->distinct()
-            ;
-        }
-        */
+        $query = Consulta::find()
+        ->innerJoin('usuario', 'usuario.id=consulta.id_paciente');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => ['attributes' => ['nome', 'nomemedico', 'data_consulta', 'estado']],
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
@@ -77,7 +66,16 @@ class ConsultaSearch extends Consulta
             'data_consulta' => $this->data_consulta,
         ]);
 
-        $query->andFilterWhere(['like', 'estado', $this->estado]);
+        $query->andFilterWhere(['like', 'estado', $this->estado])
+        ->andFilterWhere(['like', 'nome', $this->nome])
+        ->andFilterWhere(['like', 'nome', $this->nomemedico]);
+
+        if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 4)
+            {
+                $query->andFilterWhere(['id_medico' => Yii::$app->user->identity->id]);
+            }
+        }
 
         return $dataProvider;
     }

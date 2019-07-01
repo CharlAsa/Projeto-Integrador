@@ -39,7 +39,7 @@ class Consulta extends \yii\db\ActiveRecord
             [['estado'], 'string', 'max' => 1],
             [['id_paciente'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['id_paciente' => 'id']],
             [['id_medico'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['id_medico' => 'id']],
-			[['horario'], 'string', 'max' => 5],
+            [['horario'], 'string', 'max' => 5],
 		];
     }
 
@@ -54,16 +54,17 @@ class Consulta extends \yii\db\ActiveRecord
             'id_medico' => 'Id Medico',
             'data_consulta' => 'Data Consulta',
             'estado' => 'Estado',
-			'horario' => 'Hora da consulta',
+            'horario' => 'Hora da consulta',
         ];
     }
 
+    
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getPaciente()
     {
-        return $this->hasOne(Paciente::className(), ['id_usuario' => 'id_paciente']);
+        return $this->hasOne(Usuario::className(), ['id' => 'id_paciente']);
     }
 
     /**
@@ -71,7 +72,7 @@ class Consulta extends \yii\db\ActiveRecord
      */
     public function getMedico()
     {
-        return $this->hasOne(Medico::className(), ['id_usuario' => 'id_medico']);
+        return $this->hasOne(Usuario::className(), ['id' => 'id_medico']);
     }
 
     /**
