@@ -14,16 +14,6 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
-$this->registerJs(
-    "
-		//setInterval(click, 1000);
-
-		function click()
-		{
-			$('#vvv').click();
-		}
-	",
-);
 
 ?>
 <div class="usuario-view">

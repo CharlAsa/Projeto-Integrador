@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\helpers\ArrayHelper;
+use app\models\Usuario;
+
 /**
  * LaudoController implements the CRUD actions for Laudo model.
  */
@@ -91,12 +94,26 @@ class LaudoController extends Controller
 			{
                 $model = new Laudo();
 
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id_consulta]);
+                //CÓDIGO TESTE
+                $arrayUsuario = ArrayHelper::map(Usuario::find()->where(['id_Yii' => '2'])->all(), 'id', 'nome');
+
+
+                if ($model->load(Yii::$app->request->post())) {
+                    $idConsulta = (new \yii\db\Query())->select(['id'])->from('consulta')->where(['id_paciente' => $model->id_consulta])->One();
+                    
+                    $model->id_consulta = $idConsulta;
+
+                    //var_dump($model->id_consulta);
+                    //die();
+                    if($model->save())
+                    {
+                        return $this->redirect(['view', 'id' => $model->id_consulta]);
+                    }
                 }
 
                 return $this->render('create', [
                     'model' => $model,
+                    'arrayUsuario' => $arrayUsuario,
                 ]);
             }
 			else{
