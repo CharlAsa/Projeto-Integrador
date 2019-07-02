@@ -48,13 +48,19 @@ class UsuarioController extends Controller
     public function actionIndex()
     {
         if(!Yii::$app->user->isGuest){
-            $searchModel = new UsuarioSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                $searchModel = new UsuarioSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -70,9 +76,15 @@ class UsuarioController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->isGuest){
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                return $this->render('view', [
+                    'model' => $this->findModel($id),
+                ]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -87,35 +99,41 @@ class UsuarioController extends Controller
     public function actionCreate()
     {
         if(!Yii::$app->user->isGuest){
-            $model = new Usuario();
-            $arrayEndereco = new Endereco();
-            $arrayContato = new Contato();
-            $model2 = new Medico();
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                $model = new Usuario();
+                $arrayEndereco = new Endereco();
+                $arrayContato = new Contato();
+                $model2 = new Medico();
 
-            if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
-                if($model->save())
-                {
-                    $arrayContato->id_usuario = $model->id; 
-                    $arrayEndereco->id_usuario = $model->id;
-                    $model2->id_usuario = $model->id;
-
-                    if($arrayContato->save() && $arrayEndereco->save())
+                if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
+                    if($model->save())
                     {
-                        Yii::trace($model2);
-                        if($model->id_Yii == 4){
-                            $model2->save();
+                        $arrayContato->id_usuario = $model->id; 
+                        $arrayEndereco->id_usuario = $model->id;
+                        $model2->id_usuario = $model->id;
+
+                        if($arrayContato->save() && $arrayEndereco->save())
+                        {
+                            Yii::trace($model2);
+                            if($model->id_Yii == 4){
+                                $model2->save();
+                            }
+                            return $this->redirect(['view', 'id' => $model->id]);
                         }
-                        return $this->redirect(['view', 'id' => $model->id]);
                     }
                 }
-            }
 
-            return $this->render('create', [
-                'model' => $model,
-                'model2' => $model2,
-                'arrayEndereco' => $arrayEndereco,
-                'arrayContato' => $arrayContato,
-            ]);
+                return $this->render('create', [
+                    'model' => $model,
+                    'model2' => $model2,
+                    'arrayEndereco' => $arrayEndereco,
+                    'arrayContato' => $arrayContato,
+                ]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -132,43 +150,49 @@ class UsuarioController extends Controller
     public function actionUpdate($id)
     {
         if(!Yii::$app->user->isGuest){
-            $model = Usuario::findOne($id);
-            //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
-            //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
-            //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
-            $model2 = Medico::findOne($id);
-            $arrayContato = Contato::findOne($id);
-            $arrayEndereco = Endereco::findOne($id);
-            //$arrayContato = $this->findModelContato($idContato);
-            //$arrayEndereco = $this->findModelEndereco($idEndereco);
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                $model = Usuario::findOne($id);
+                //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
+                //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
+                //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
+                $model2 = Medico::findOne($id);
+                $arrayContato = Contato::findOne($id);
+                $arrayEndereco = Endereco::findOne($id);
+                //$arrayContato = $this->findModelContato($idContato);
+                //$arrayEndereco = $this->findModelEndereco($idEndereco);
 
 
-            $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
+                $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
 
-            if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
-            && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
-            {
-
-                $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
-                if($model->save())
+                if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
+                && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
                 {
-                    $arrayContato->id_usuario = $model->id; 
-                    $arrayEndereco->id_usuario = $model->id;
-                    if($arrayContato->save() && $arrayEndereco->save())
+
+                    $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
+                    if($model->save())
                     {
-                        $model2->save();
-                        return $this->redirect(['view', 'id' => $model->id]);
+                        $arrayContato->id_usuario = $model->id; 
+                        $arrayEndereco->id_usuario = $model->id;
+                        if($arrayContato->save() && $arrayEndereco->save())
+                        {
+                            $model2->save();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
                     }
                 }
+
+
+                return $this->render('update', [
+                    'model' => $model,
+                    'arrayContato' => $arrayContato,
+                    'arrayEndereco' => $arrayEndereco,
+                    'model2'=>$model2,
+                ]);
             }
-
-
-            return $this->render('update', [
-                'model' => $model,
-                'arrayContato' => $arrayContato,
-                'arrayEndereco' => $arrayEndereco,
-                'model2'=>$model2,
-            ]);
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -185,18 +209,24 @@ class UsuarioController extends Controller
     public function actionDelete($id)
     {
         if(!Yii::$app->user->isGuest){
-            if(Consulta::find()->where(['id_paciente' =>$id])->one()){
-                throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
+            if(Yii::$app->user->identity->id_Yii == 1)
+			{
+                if(Consulta::find()->where(['id_paciente' =>$id])->one()){
+                    throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
+                }
+                //Paciente::findOne($id)->delete();
+                Contato::findOne($id)->delete();
+                Endereco::findOne($id)->delete();
+                $m = Medico::findOne($id);
+                if($m != null){
+                    $m->delete();
+                }
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
             }
-            //Paciente::findOne($id)->delete();
-            Contato::findOne($id)->delete();
-            Endereco::findOne($id)->delete();
-            $m = Medico::findOne($id);
-            if($m != null){
-                $m->delete();
-            }
-            $this->findModel($id)->delete();
-            return $this->redirect(['index']);
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
         else{
 			return $this->redirect(['site/login']);
@@ -211,7 +241,7 @@ class UsuarioController extends Controller
     public function actionCadastrarpaciente()
     {
 		if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 1 || Yii::$app->user->identity->id_Yii == 100){
+			if(Yii::$app->user->identity->id_Yii == 1){
 				$model = new Usuario();
 				$model2 = new Contato();
 				$model3 = new Endereco();
@@ -257,13 +287,13 @@ class UsuarioController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionPaginainicial()
-    {
-		$id = Yii::$app->user->identity->id;
-        return $this->render('paginainicial', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+    //public function actionPaginainicial()
+    //{
+	//	$id = Yii::$app->user->identity->id;
+    //    return $this->render('paginainicial', [
+    //        'model' => $this->findModel($id),
+    //    ]);
+    //}
 
     /**
      * Finds the Usuario model based on its primary key value.
