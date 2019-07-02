@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\Laudo */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,17 +13,26 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_consulta')->textInput() ?>
+    <?= $form->field($model, 'id_consulta')->
+        widget(Select2::classname(), [
+            //'data' => $arraySecao,
+            'data' => $arrayUsuario,
+            'options' => ['placeholder' => Yii::t('app','Selecione o paciente que deseja ...')],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
-    <?= $form->field($model, 'oe')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'oe')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'od')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'od')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'dp')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'dp')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'lentes')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'lentes')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'observacoes')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'observacoes')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'nova_consulta')->textInput() ?>
 

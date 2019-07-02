@@ -154,7 +154,7 @@ use kartik\date\DatePicker;
 				}
 			}
 		',
-		'id'=>'radiodafuq'],
+		'id'=>'radiodafuq']
 		)
 	?>	
 
