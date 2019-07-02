@@ -101,10 +101,8 @@ class LaudoController extends Controller
                 if ($model->load(Yii::$app->request->post())) {
                     $idConsulta = (new \yii\db\Query())->select(['id'])->from('consulta')->where(['id_paciente' => $model->id_consulta])->One();
                     
-                    $model->id_consulta = $idConsulta;
+                    $model->id_consulta = $idConsulta['id'];
 
-                    //var_dump($model->id_consulta);
-                    //die();
                     if($model->save())
                     {
                         return $this->redirect(['view', 'id' => $model->id_consulta]);
