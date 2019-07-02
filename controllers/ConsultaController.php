@@ -107,7 +107,8 @@ class ConsultaController extends Controller
     public function actionUpdate($id = null)
     {
 		if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii != 2)
+			$id_Yii = Yii::$app->user->identity->id_Yii;
+			if($id_Yii != 2)
 			{
 				if($id == null){
 					return $this->redirect(['index']);
@@ -115,12 +116,97 @@ class ConsultaController extends Controller
 
 				$model = $this->findModel($id);
 
-				if ($model->load(Yii::$app->request->post()) && $model->save()) {
-					return $this->redirect(['view', 'id' => $model->id]);
+				if ($model->load(Yii::$app->request->post())) {
+
+					//checa se existe outra consulta do paciente no mesmo horário
+					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
+
+					$c = (new \yii\db\Query())
+					->from('consulta')
+					->where(['id_medico' => $model->id_medico])
+					->andWhere(['id_paciente'=>$model->id_paciente])
+					->andWhere(['between', 'data_consulta', $aux, $aux])
+					->andWhere(['horario'=>$model->horario])
+					->count();
+					if($c == 1 || $c == 0){
+						if($model->save()){
+							return $this->redirect(['view', 'id' => $model->id]);
+						}
+					}
+					else{
+						return $this->redirect(['index']);
+					}
 				}
+
+				$param1 = Yii::$app->request->post('param1', null);
+				$param2 = Yii::$app->request->post('param2', null);
+
+				$v["valor"] = null;
+				$v["op"] = -1;
+
+				$u = "o";
+
+				if($param1 != null){ 
+					if(strlen($param1) == 10){
+						$param1 = str_replace('/', '-', $param1);
+						$param1 = date("Y-m-d", strtotime($param1));					
+						$v["valor"] = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['between', 'data_consulta', $param1, $param1])
+						//->andWhere(['data_consulta'=>$param1])
+						->count();
+						$v["op"] = 0;
+					}
+					else if(strlen($param1) == 5){
+						$param1 = str_replace('.', ':', $param1);
+						$v["valor"] = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['horario'=>$param1])
+						->count();
+						$v["op"] = 1;
+						$model->horario = $param1;
+					}
+				}
+
+				$linhas = (new \yii\db\Query())
+				->select(['id', 'nome'])
+				->from('usuario')
+				->where(['id_Yii' => 2])
+				->all();
+
+				$usuario = ArrayHelper::map(
+					$linhas,
+					'id',
+					'nome'
+				);
+
+				$medico = null;
+				if($id_Yii == 1){
+					$linhasM = (new \yii\db\Query())
+					->select(['id', 'nome'])
+					->from('usuario')
+					->where(['id_Yii' => 4])
+					->all();
+
+
+					$medico = ArrayHelper::map(
+						$linhasM,
+						'id',
+						'nome'
+					); 
+				}
+
+				//strtotime(str_replace('/', '-', $model->data_consulta))
+
+				$model->data_consulta = date("d/m/Y", strtotime(str_replace('/', '-', $model->data_consulta)));
 
 				return $this->render('update', [
 					'model' => $model,
+					'usuario' => $usuario,
+					'v' => $v,
+					'medico' => $medico,
 				]);
 			}
 			else{
@@ -193,7 +279,7 @@ class ConsultaController extends Controller
 						}
 					}
 					else{
-						return $this->redirect('index');
+						return $this->redirect(['index']);
 					}
 				}
 
@@ -215,7 +301,7 @@ class ConsultaController extends Controller
 						$param1 = date("Y-m-d", strtotime($param1));					
 						$v["valor"] = (new \yii\db\Query())
 						->from('consulta')
-						->where(['id_medico' => Yii::$app->user->identity->id])
+						->where(['id_medico' => $model->id_medico])
 						->andWhere(['between', 'data_consulta', $param1, $param1])
 						//->andWhere(['data_consulta'=>$param1])
 						->count();
@@ -225,7 +311,7 @@ class ConsultaController extends Controller
 						$param1 = str_replace('.', ':', $param1);
 						$v["valor"] = (new \yii\db\Query())
 						->from('consulta')
-						->where(['id_medico' => Yii::$app->user->identity->id])
+						->where(['id_medico' => $model->id_medico])
 						->andWhere(['horario'=>$param1])
 						->count();
 						$v["op"] = 1;
@@ -350,9 +436,6 @@ class ConsultaController extends Controller
 				->select(['id', 'nome'])
 				->from('usuario')
 				->where(['id_Yii' => 4])
-				//->orwhere(['id_Yii'=>3])
-				//->orwhere(['id_Yii'=>6])
-				//->orwhere(['id_Yii'=>7])
 				->all();
 
 				$usuario = ArrayHelper::map(

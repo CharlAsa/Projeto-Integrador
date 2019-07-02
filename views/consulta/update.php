@@ -16,8 +16,20 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <?php if($medico != null){ ?>
+        <?= $this->render('_formsecretario', [
+            'model' => $model,
+            'usuario' => $usuario,
+            'v' => $v,
+            'medico' => $medico,
+        ]) ?>
+    <?php }
+    else{ ?>
+        <?= $this->render('_form', [
+            'model' => $model,
+            'usuario' => $usuario,
+            'v' => $v,
+        ]) ?>
+    <?php } ?>
 
 </div>
