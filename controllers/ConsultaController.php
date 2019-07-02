@@ -62,9 +62,22 @@ class ConsultaController extends Controller
 			if($id == null){
 				return $this->redirect(['index']);
 			}
-			return $this->render('view', [
-				'model' => $this->findModel($id),
-			]);
+
+			$model = $this->findModel($id);
+
+			if($model->id_paciente == Yii::$app->user->identity->id){
+				return $this->render('view', [
+					'model' => $this->findModel($id),
+				]);
+			}
+			else{
+				if(Yii::$app->user->identity->id_Yii != 2){
+					return $this->render('view', [
+						'model' => $this->findModel($id),
+					]);
+				}
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
 		}
 		else{
 			return $this->redirect(['site/login']);
