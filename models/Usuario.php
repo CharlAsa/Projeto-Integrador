@@ -174,8 +174,9 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
 				
 				$this->nascimento = str_replace('/', '-', $this->nascimento);
 				$this->nascimento = date("Y-m-d", strtotime($this->nascimento));
-				//Yii::trace($this->nascimento);
-				//$this->id_Yii = 1;
+                //Comenta as linhas abaixo para não usar o hash na hora de salvar
+                $pa = $this->password;
+                $this->password = Yii::$app->getSecurity()->generatePasswordHash($pa);
             }
             return true;
         }
@@ -183,7 +184,13 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     }
 	
 	public function validatePassword($pass){
-		return $this->password === $pass;
+        //return $this->password === $pass;
+        if(Yii::$app->getSecurity()->validatePassword($pass, $this->password)){
+            return true;
+        }
+        else{
+            return false;
+        }
 	}
 
     public static function getContatoTelefone($id){
