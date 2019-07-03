@@ -55,6 +55,8 @@ class Consulta extends \yii\db\ActiveRecord
             'data_consulta' => 'Data Consulta',
             'estado' => 'Estado',
             'horario' => 'Hora da consulta',
+            'paciente.nome' => 'Nome do Paciente',
+            'medico.nome' => 'Nome do Médico',
         ];
     }
 
@@ -82,16 +84,24 @@ class Consulta extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Laudo::className(), ['id_consulta' => 'id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLaudo()
+    {
+        return $this->hasOne(Laudo::className(), ['id_consulta' => 'id']);
+    }
 	
 	public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
+            //if ($this->isNewRecord) {
 				$this->data_consulta = str_replace('/', '-', $this->data_consulta);
 				$this->data_consulta = date("Y-m-d", strtotime($this->data_consulta));
 				//Yii::trace($this->nascimento);
 				//$this->id_Yii = 1;
-            }
+            //}
             return true;
         }
         return false;
