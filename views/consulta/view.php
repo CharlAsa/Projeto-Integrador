@@ -29,14 +29,29 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            //'id',
-            //'id_paciente',
-            //'id_medico',
             'paciente.nome',
             'medico.nome',
             'data_consulta',
             'estado',
         ],
     ]) ?>
+
+    <?php
+        if($model->laudos != null){
+            echo '<h3> Resultado da consulta </h3>';
+            echo DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'laudo.oe',
+                    'laudo.od',
+                    'laudo.dp', 
+                    'laudo.lentes', 
+                    'laudo.observacoes',
+                    'laudo.nova_consulta',
+                ],
+            ]);
+        }
+
+    ?>
 
 </div>

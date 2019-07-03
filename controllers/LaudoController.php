@@ -39,7 +39,7 @@ class LaudoController extends Controller
     public function actionIndex()
     {
         if(!Yii::$app->user->isGuest){
-            if(Yii::$app->user->identity->id_Yii == 1)
+            if(Yii::$app->user->identity->id_Yii != 2)
 			{
                 $searchModel = new LaudoSearch();
                 $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -67,7 +67,7 @@ class LaudoController extends Controller
     public function actionView($id)
     {
         if(!Yii::$app->user->isGuest){
-            if(Yii::$app->user->identity->id_Yii == 1)
+            if(Yii::$app->user->identity->id_Yii != 2)
 			{
                 return $this->render('view', [
                     'model' => $this->findModel($id),

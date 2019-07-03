@@ -47,12 +47,12 @@ class Laudo extends \yii\db\ActiveRecord
     {
         return [
             'id_consulta' => 'Id Consulta',
-            'oe' => 'Oe',
-            'od' => 'Od',
+            'oe' => 'Olho esquerdo',
+            'od' => 'Olho direito',
             'dp' => 'Dp',
             'lentes' => 'Lentes',
-            'observacoes' => 'Observacoes',
-            'nova_consulta' => 'Nova Consulta',
+            'observacoes' => 'Observações',
+            'nova_consulta' => 'Data da Nova Consulta',
         ];
     }
 
