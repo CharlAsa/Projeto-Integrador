@@ -94,16 +94,6 @@ class LaudoController extends Controller
 			{
                 $model = new Laudo();
 
-                //CÓDIGO TESTE
-                $arrayUsuario = ArrayHelper::map(
-                    Usuario::find()
-                    //->innerJoin('consulta','consulta.id_usuario=usuario.id')
-                    //->innerJoin('medico','medico.id_usuario=consulta.id')
-                    ->where(['id_Yii' => '2'])
-                    ->all(), 
-                    'id', 
-                    'nome'
-                );
 
 
                 if ($model->load(Yii::$app->request->post())) {
@@ -139,6 +129,17 @@ class LaudoController extends Controller
                     }
                 }
 
+                //CÓDIGO TESTE
+                $arrayUsuario = ArrayHelper::map(
+                    Usuario::find()
+                    //->innerJoin('consulta','consulta.id_usuario=usuario.id')
+                    //->innerJoin('medico','medico.id_usuario=consulta.id')
+                    ->where(['id_Yii' => '2'])
+                    ->all(), 
+                    'id', 
+                    'nome'
+                );
+
                 return $this->render('create', [
                     'model' => $model,
                     'arrayUsuario' => $arrayUsuario,
@@ -171,8 +172,22 @@ class LaudoController extends Controller
                     return $this->redirect(['view', 'id' => $model->id_consulta]);
                 }
 
+                $arrayUsuario = (new \yii\db\Query())->select(['id_paciente'])->from('consulta')->where(['id' => $model->id_consulta])->one();
+
+                $arrayUsuario = ArrayHelper::map(
+                    Usuario::find()
+                    //->innerJoin('consulta','consulta.id_usuario=usuario.id')
+                    //->innerJoin('medico','medico.id_usuario=consulta.id')
+                    ->where(['id_Yii' => '2'])
+                    ->AndWhere(['id' => $arrayUsuario])
+                    ->All(), 
+                    'id', 
+                    'nome'
+                );
+
                 return $this->render('update', [
                     'model' => $model,
+                    'arrayUsuario' => $arrayUsuario,
                 ]);
             }
 			else{
