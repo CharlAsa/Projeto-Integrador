@@ -95,17 +95,47 @@ class LaudoController extends Controller
                 $model = new Laudo();
 
                 //CÓDIGO TESTE
-                $arrayUsuario = ArrayHelper::map(Usuario::find()->where(['id_Yii' => '2'])->all(), 'id', 'nome');
+                $arrayUsuario = ArrayHelper::map(
+                    Usuario::find()
+                    //->innerJoin('consulta','consulta.id_usuario=usuario.id')
+                    //->innerJoin('medico','medico.id_usuario=consulta.id')
+                    ->where(['id_Yii' => '2'])
+                    ->all(), 
+                    'id', 
+                    'nome'
+                );
 
 
                 if ($model->load(Yii::$app->request->post())) {
-                    $idConsulta = (new \yii\db\Query())->select(['id'])->from('consulta')->where(['id_paciente' => $model->id_consulta])->One();
+                    $idConsultas = (new \yii\db\Query())->
+                    select(['id'])
+                    ->from('consulta')
+                    ->where(['id_paciente' => $model->id_consulta])
+                    ->All();
+
+                    $idConsulta = null;
+
+                    foreach($idConsultas as $id){
+                        $aux = (new \yii\db\Query())->
+                        select(['id_consulta'])
+                        ->from('laudo')
+                        ->where(['id_consulta' => $id])
+                        ->One();
+                        if($aux == null){
+                            $idConsulta = $id;
+                        }
+                    }
                     
                     $model->id_consulta = $idConsulta['id'];
 
-                    if($model->save())
-                    {
-                        return $this->redirect(['view', 'id' => $model->id_consulta]);
+                    if($model->id_consulta != null){
+                        if($model->save())
+                        {
+                            return $this->redirect(['view', 'id' => $model->id_consulta]);
+                        }
+                    }
+                    else{
+                        return $this->redirect(['index']);
                     }
                 }
 
