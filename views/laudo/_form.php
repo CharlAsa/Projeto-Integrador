@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\date\DatePicker;
 use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\Laudo */
@@ -10,6 +10,14 @@ use kartik\select2\Select2;
 ?>
 
 <div class="laudo-form">
+
+<?php if (Yii::$app->session->hasFlash('success')): ?>
+    <div class="alert alert-success alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="icon fa fa-check"></i>Saved!</h4>
+         <?= Yii::$app->session->getFlash('success') ?>
+    </div>
+<?php endif; ?>
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -34,7 +42,19 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'observacoes')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'nova_consulta')->textInput() ?>
+    <?=
+		
+		$form->field($model, 'nova_consulta')->widget(DatePicker::className(), [
+			'language' => 'pt',
+			'options' => [
+				'placeholder' => 'Escolha a data da consulta...',
+				],
+			'pluginOptions' => [
+				'autoclose'=>true
+			],
+		])
+		
+	?>>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

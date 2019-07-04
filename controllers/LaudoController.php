@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 
 use yii\helpers\ArrayHelper;
 use app\models\Usuario;
+use app\models\Consulta;
 
 /**
  * LaudoController implements the CRUD actions for Laudo model.
@@ -94,8 +95,6 @@ class LaudoController extends Controller
 			{
                 $model = new Laudo();
 
-
-
                 if ($model->load(Yii::$app->request->post())) {
                     $idConsultas = (new \yii\db\Query())->
                     select(['id'])
@@ -168,7 +167,13 @@ class LaudoController extends Controller
 			{
                 $model = $this->findModel($id);
 
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                if ($model->load(Yii::$app->request->post())) {
+                    $aux = $this->findModel($id);
+                    
+                    $model->id_consulta = $aux->id_consulta;
+
+                    $model->save();
+
                     return $this->redirect(['view', 'id' => $model->id_consulta]);
                 }
 
@@ -176,19 +181,28 @@ class LaudoController extends Controller
 
                 $arrayUsuario = ArrayHelper::map(
                     Usuario::find()
-                    //->innerJoin('consulta','consulta.id_usuario=usuario.id')
+                    ->innerJoin('consulta','consulta.id_paciente=usuario.id')
                     //->innerJoin('medico','medico.id_usuario=consulta.id')
                     ->where(['id_Yii' => '2'])
-                    ->AndWhere(['id' => $arrayUsuario])
+                    ->AndWhere(['consulta.id_paciente' => $arrayUsuario])
                     ->All(), 
                     'id', 
                     'nome'
                 );
 
-                return $this->render('update', [
-                    'model' => $model,
-                    'arrayUsuario' => $arrayUsuario,
-                ]);
+                $model->nova_consulta = date("d/m/Y", strtotime(str_replace('/', '-', $model->nova_consulta)));
+
+                $teste = Consulta::find()->where(['id_medico' => Yii::$app->user->identity->id])->andWhere(['id' => $id])->one();
+                if($teste != null){
+                    return $this->render('update', [
+                        'model' => $model,
+                        'arrayUsuario' => $arrayUsuario,
+                    ]);
+                }
+                else{
+                    Yii::$app->session->setFlash('error', "Você não tem permissão para realizar essa operação.");
+                    return $this->redirect(['laudo/index']);
+                }
             }
 			else{
 				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));

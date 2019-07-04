@@ -20,6 +20,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+    <?php if (Yii::$app->session->hasFlash('error')): ?>
+    <div class="alert alert-danger alert-dismissable">
+         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+         <h4><i class="icon fa fa-check"></i>Sem permissão!</h4>
+         <?= Yii::$app->session->getFlash('error') ?>
+    </div>
+    <?php endif; ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -31,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'od:ntext',
             'dp:ntext',
             'lentes:ntext',
+            'consulta.medico.nome',
             //'observacoes:ntext',
             //'nova_consulta',
 

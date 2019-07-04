@@ -33,6 +33,7 @@ class Laudo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id_consulta'], 'required'],
             [['id_consulta'], 'integer'],
             [['oe', 'od', 'dp', 'lentes', 'observacoes'], 'string'],
             [['nova_consulta'], 'safe'],
@@ -73,5 +74,19 @@ class Laudo extends \yii\db\ActiveRecord
 
 		//return array('id_usuario', 'infacao_id');
 
-	}
+    }
+    
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            //if ($this->isNewRecord) {
+				$this->nova_consulta = str_replace('/', '-', $this->nova_consulta);
+				$this->nova_consulta = date("Y-m-d", strtotime($this->nova_consulta));
+				//Yii::trace($this->nascimento);
+				//$this->id_Yii = 1;
+            //}
+            return true;
+        }
+        return false;
+    }
 }
