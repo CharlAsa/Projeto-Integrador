@@ -17,6 +17,7 @@ class m190508_033036_test extends Migration
             'rg' => '12323',
             'username' => 'alfa',
             'password' => Yii::$app->getSecurity()->generatePasswordHash('alfa'),
+            'id_Yii' => 1,
         ]);
         $this->insert('endereco', [
             'id_usuario' => 1,
