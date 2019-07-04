@@ -171,13 +171,12 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             if ($this->isNewRecord) {
                 $this->auth_key_Yii = \Yii::$app->security->generateRandomString();
 				$this->data_cadastro = new \yii\db\Expression('NOW()');
-				
-				$this->nascimento = str_replace('/', '-', $this->nascimento);
+            }
+                $this->nascimento = str_replace('/', '-', $this->nascimento);
 				$this->nascimento = date("Y-m-d", strtotime($this->nascimento));
                 //Comenta as linhas abaixo para não usar o hash na hora de salvar
                 $pa = $this->password;
                 $this->password = Yii::$app->getSecurity()->generatePasswordHash($pa);
-            }
             return true;
         }
         return false;

@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Usuarios'), 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
-
 ?>
 <div class="usuario-view">
 
@@ -33,17 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'cpf',
-            'rg',
+            //'id',
+            //'cpf',
+            //'rg',
             'sexo',
             'nascimento',
             'data_cadastro',
             'username',
-            'password',
-            'auth_key_Yii',
-            'access_token_Yii',
-            'id_Yii',
+            //'password',
+            //'auth_key_Yii',
+            //'access_token_Yii',
+            //'id_Yii',
 			'nome',
             [
                 'attribute' => 'Número Telefone',

@@ -115,7 +115,6 @@ class UsuarioController extends Controller
 
                         if($arrayContato->save() && $arrayEndereco->save())
                         {
-                            Yii::trace($model2);
                             if($model->id_Yii == 4){
                                 $model2->save();
                             }
@@ -156,12 +155,15 @@ class UsuarioController extends Controller
                 //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
                 //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
                 //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
-                $model2 = Medico::findOne($id);
+                $model2 = new Medico();
+                $aux = Medico::findOne($id);
+                if($aux != null){
+                    $model2 = $aux;
+                }
                 $arrayContato = Contato::findOne($id);
                 $arrayEndereco = Endereco::findOne($id);
                 //$arrayContato = $this->findModelContato($idContato);
                 //$arrayEndereco = $this->findModelEndereco($idEndereco);
-
 
                 $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
 
@@ -176,7 +178,16 @@ class UsuarioController extends Controller
                         $arrayEndereco->id_usuario = $model->id;
                         if($arrayContato->save() && $arrayEndereco->save())
                         {
-                            $model2->save();
+                            if($model2 != null){
+                                $model2->id_usuario = $model->id;
+                                $model2->save();
+                            }
+                            if($model->id_Yii != 4){
+                                $m = Medico::findOne($model->id);
+                                if($m != null){
+                                    $m->delete();
+                                }
+                            }
                             return $this->redirect(['view', 'id' => $model->id]);
                         }
                     }
