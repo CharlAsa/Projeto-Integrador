@@ -38,7 +38,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Gentellela Alela!</span></a>
+                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Edite me!</span></a>
                 </div>
                 <div class="clearfix"></div>
 
@@ -48,7 +48,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                         <img src="http://placehold.it/128x128" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
-                        <span>Welcome,</span>
+                        <span>Seja bem vindo,</span>
                         <h2> <?php 
                         //Nome
                         if(!Yii::$app->user->isGuest)
@@ -66,7 +66,8 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
                     <div class="menu_section">
-                        <h3>General</h3>
+                        <!-- <h3> General</h3> -->
+                        <h3> <br> <br> <br> <br> <br> </h3>
                         <?=
                         \yiister\gentelella\widgets\Menu::widget(
                             [
@@ -126,7 +127,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
 
                 <!-- /menu footer buttons -->
                 <div class="sidebar-footer hidden-small">
-                    <a data-toggle="tooltip" data-placement="top" title="Logout" url= <?= Url::to(['site/logout'])?> data-method='POST'>
+                    <a data-toggle="tooltip" data-placement="top" title="Sair" url= <?= Url::to(['site/logout'])?> data-method='POST'>
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
                 </div>
@@ -157,7 +158,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="javascript:;">  Profile</a>
+                                <!-- <li><a href="javascript:;">  Profile</a>
                                 </li>
                                 <li>
                                     <a href="javascript:;">
@@ -167,13 +168,13 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                 </li>
                                 <li>
                                     <a href="javascript:;">Help</a>
-                                </li>
+                                </li> -->
                                 <li>
                                 <?php
                                     if(Yii::$app->user->isGuest){
                                         echo '<a href="'.
                                         Url::to(['site/login'])
-                                        .'">Login</a>';
+                                        .'">Logar</a>';
                                     }
                                     else{
                                         //echo '<a>'. 
@@ -184,7 +185,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                         //)
                                         //. Html::endForm()
                                         //.'</a>';
-                                        echo Html::a('<i class="fa fa-sign-out pull-right"></i>'.'Logout', Url::to(['site/logout']), ['data-method' => 'POST']);
+                                        echo Html::a('<i class="fa fa-sign-out pull-right"></i>'.'Sair', Url::to(['site/logout']), ['data-method' => 'POST']);
                                     }
                                 ?>
                                 <!-- <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a> -->
