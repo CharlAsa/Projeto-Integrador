@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ConsultaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Consultas');
+$this->title = Yii::t('app', 'Lista das consultas');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="consulta-index">
@@ -15,7 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Consulta'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php  
+            if(Yii::$app->user->isGuest == false){ if(Yii::$app->user->identity->id_Yii != 2){
+        ?>
+            <?= Html::a(Yii::t('app', 'Agendar consulta'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php }}  ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -25,10 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'data_consulta',
-            'horario',
-            'estado',
 
             [
                 'label' => 'Nome do Paciente',
@@ -47,6 +47,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->medico->nome;
                 },
             ],
+            'data_consulta',
+            'horario',
+            'estado',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
