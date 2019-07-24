@@ -14,7 +14,8 @@ class SiteController extends Controller
 {
 	
 	//public $layout = '@app/views/layouts/startbootstrap-landing-page-gh-pages/index';
-	
+    public $layout;
+    
     /**
      * {@inheritdoc}
      */
@@ -74,6 +75,7 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $this->layout = '@app/views/layouts/login_main.php';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
