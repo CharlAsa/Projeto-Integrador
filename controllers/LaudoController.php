@@ -13,6 +13,9 @@ use yii\helpers\ArrayHelper;
 use app\models\Usuario;
 use app\models\Consulta;
 
+use app\models\LaudoUpload;
+use yii\web\UploadedFile;
+
 /**
  * LaudoController implements the CRUD actions for Laudo model.
  */
@@ -252,5 +255,24 @@ class LaudoController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    /**
+     * Upload do laudo da consulta.
+     * 
+     * @return ?
+     */
+
+    public function actionLaudoupload()
+    {
+        $model = new LaudoUpload();
+
+        if (Yii::$app->request->isPost) {
+            $model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
+            if ($model->upload()) {
+                return;
+            }
+        }
+        return $this->render('laudoupload', ['model' => $model]);
     }
 }

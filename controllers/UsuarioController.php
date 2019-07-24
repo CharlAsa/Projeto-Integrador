@@ -20,6 +20,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\base\UserException;
+use app\models\FotoUpload;
+use yii\web\UploadedFile;
 
 /**
  * UsuarioController implements the CRUD actions for Usuario model.
@@ -290,6 +292,26 @@ class UsuarioController extends Controller
 		else{
 			return $this->redirect(['site/login']);
 		}
+    }
+
+    /**
+     * Upload de foto do usuário.
+     * 
+     * @return ?
+     */
+
+    public function actionAssinaturaupload()
+    {
+        $model = new FotoUpload();
+
+        if (Yii::$app->request->isPost) {
+            $model->foto = UploadedFile::getInstance($model, 'foto');
+            if ($model->upload()) {
+                return;
+            }
+        }
+
+        return $this->render('fotoupload', ['model' => $model]);
     }
 	
 	/**
