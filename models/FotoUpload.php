@@ -25,8 +25,8 @@ class FotoUpload extends Model
             return false;
         }
         if ($this->validate()) {
-            $nome = \Yii::$app->security->generateRandomString().$this->foto->baseName.\Yii::$app->security->generateRandomString();
-            $url ='../uploads/fotos/' . $nome . '.' . $this->foto->extension;
+            $nome = \Yii::$app->security->generateRandomString().$this->foto->baseName.\Yii::$app->security->generateRandomString(). '.' . $this->foto->extension;
+            $url ='../uploads/fotos/' . $nome;
             
             $usuario = Usuario::findOne(['id' => $id_medico]);
 

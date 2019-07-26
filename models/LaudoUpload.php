@@ -25,8 +25,8 @@ class LaudoUpload extends Model
             return false;
         }
         if ($this->validate()) {
-            $nome = \Yii::$app->security->generateRandomString().$this->laudopdf->baseName.\Yii::$app->security->generateRandomString();
-            $url ='../uploads/laudo/' . $nome . '.' . $this->laudopdf->extension;
+            $nome = \Yii::$app->security->generateRandomString().$this->laudopdf->baseName.\Yii::$app->security->generateRandomString() . '.' . $this->laudopdf->extension;
+            $url ='../uploads/laudo/' . $nome;
 
             $laudo = Consulta::findOne(['id' => $id_consulta]);
 
