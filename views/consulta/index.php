@@ -51,7 +51,28 @@ $this->params['breadcrumbs'][] = $this->title;
             'horario',
             'estado',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn','template'=>'{atualizar} {ver} {deletar} {upload}',
+            'buttons'  => [
+            'atualizar' => function ($url,$model,$key) {
+                return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['consulta/update', 'id'=>$model->id], ['title'=>Yii::t('app','Atualizar')]);
+            },
+            'ver' => function ($url,$model,$key) {
+                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['consulta/view', 'id'=>$model->id], ['title'=>Yii::t('app','Ver')]);
+            },
+            'deletar' => function ($url,$model,$key){
+                return Html::a('<span class="glyphicon glyphicon-remove-sign"></span>', ['consulta/delete', 'id'=>$model->id], ['data-confirm'=>Yii::t('app', 'Tem certeza que deseja remover esse laudo?'), 'title'=>Yii::t('app', 'Remove'), 'data-method'=>'post'],);
+            },
+            'upload' => function ($url,$model,$key) {
+                return Html::a('<span class="glyphicon glyphicon-paperclip"></span>', ['consulta/laudoupload', 'id'=>$model->id], ['title'=>Yii::t('app','Upload')]);
+            },
+            //'leadDelete' => function ($url, $model) {
+            //	$url = Url::to(['datakegiatan/delete', 'id' => $model->ID_DATA]);
+            //	return Html::a('<span class="fa fa-trash"></span>', $url, [
+            //		'title'        => 'delete',
+            //		'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+            //		'data-method'  => 'post',
+            //]
+            ]],
         ],
     ]); ?>
 
