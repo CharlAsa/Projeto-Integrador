@@ -531,9 +531,13 @@ class ConsultaController extends Controller
                     $model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
                     if ($model->upload($id)) {
 						//mostra o laudo
-						
+						Yii::$app->session->setFlash('success', "Upload do laudo foi um sucesso.");
                         return $this->render('laudoupload', ['model' => $model]);
-                    }
+					}
+					else{
+						Yii::$app->session->setFlash('error', "Upload do laudo falhou.");
+						return $this->render('fotoupload', ['model' => $model]);
+					}
                 }
                 return $this->render('laudoupload', ['model' => $model]);
             }
