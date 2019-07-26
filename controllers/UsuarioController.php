@@ -106,20 +106,20 @@ class UsuarioController extends Controller
                 $model = new Usuario();
                 $arrayEndereco = new Endereco();
                 $arrayContato = new Contato();
-                $model2 = new Medico();
+                //$model2 = new Medico();
 
-                if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post())) {
+                if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())) {
                     if($model->save())
                     {
                         $arrayContato->id_usuario = $model->id; 
                         $arrayEndereco->id_usuario = $model->id;
-                        $model2->id_usuario = $model->id;
+                        //$model2->id_usuario = $model->id;
 
                         if($arrayContato->save() && $arrayEndereco->save())
                         {
-                            if($model->id_Yii == 4){
-                                $model2->save();
-                            }
+                            //if($model->id_Yii == 4){
+                                //$model2->save();
+                            //}
                             return $this->redirect(['view', 'id' => $model->id]);
                         }
                     }
@@ -127,7 +127,7 @@ class UsuarioController extends Controller
 
                 return $this->render('create', [
                     'model' => $model,
-                    'model2' => $model2,
+                    //'model2' => $model2,
                     'arrayEndereco' => $arrayEndereco,
                     'arrayContato' => $arrayContato,
                 ]);
@@ -157,11 +157,11 @@ class UsuarioController extends Controller
                 //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
                 //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
                 //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
-                $model2 = new Medico();
-                $aux = Medico::findOne($id);
-                if($aux != null){
-                    $model2 = $aux;
-                }
+                //$model2 = new Medico();
+                //$aux = Medico::findOne($id);
+                //if($aux != null){
+                //    $model2 = $aux;
+                //}
                 $arrayContato = Contato::findOne($id);
                 $arrayEndereco = Endereco::findOne($id);
                 //$arrayContato = $this->findModelContato($idContato);
@@ -170,9 +170,8 @@ class UsuarioController extends Controller
                 $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
 
                 if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
-                && $arrayContato->load(Yii::$app->request->post()) && $model2->load(Yii::$app->request->post()))
+                && $arrayContato->load(Yii::$app->request->post())) 
                 {
-
                     $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
                     if($model->save())
                     {
@@ -180,10 +179,10 @@ class UsuarioController extends Controller
                         $arrayEndereco->id_usuario = $model->id;
                         if($arrayContato->save() && $arrayEndereco->save())
                         {
-                            if($model2 != null){
-                                $model2->id_usuario = $model->id;
-                                $model2->save();
-                            }
+                            //if($model2 != null){
+                                //$model2->id_usuario = $model->id;
+                                //$model2->save();
+                            //}
                             if($model->id_Yii != 4){
                                 $m = Medico::findOne($model->id);
                                 if($m != null){
@@ -200,7 +199,7 @@ class UsuarioController extends Controller
                     'model' => $model,
                     'arrayContato' => $arrayContato,
                     'arrayEndereco' => $arrayEndereco,
-                    'model2'=>$model2,
+                    //'model2'=>$model2,
                 ]);
             }
 			else{
@@ -297,21 +296,51 @@ class UsuarioController extends Controller
     /**
      * Upload de foto do usuário.
      * 
-     * @return ?
+     * @return muitas coisas, veja a src
      */
 
-    public function actionAssinaturaupload()
+    public function actionAssinaturaupload($id = null)
     {
-        $model = new FotoUpload();
+        if(!Yii::$app->user->isGuest){
+            $id_Yii = Yii::$app->user->identity->id_Yii;
+			if($id_Yii == 4 || $id_Yii == 1){
 
-        if (Yii::$app->request->isPost) {
-            $model->foto = UploadedFile::getInstance($model, 'foto');
-            if ($model->upload()) {
-                return;
+                $model = new FotoUpload();
+
+                if (Yii::$app->request->isPost) {
+                    $id_medico = $id;
+                    if($id_Yii == 4){
+                        $id_medico = Yii::$app->user->identity->id;
+                    }
+                    else{
+                        //Nessita do id_medico
+                    }
+
+                    if($id_medico != null){
+                        $model->foto = UploadedFile::getInstance($model, 'foto');
+                        if ($model->upload($id_medico)) {
+                            Yii::$app->session->setFlash('success', "Upload da assinatura foi um sucesso.");
+                            return $this->render('fotoupload', ['model' => $model]);
+                        }
+                        else{
+                            Yii::$app->session->setFlash('error', "Upload da assinatura falhou.");
+                            return $this->render('fotoupload', ['model' => $model]);
+                        }
+                    }
+                    else{
+                        throw new NotFoundHttpException(Yii::t('app', 'Médico não encontrado.'));
+                    }
+                }
+
+                return $this->render('fotoupload', ['model' => $model]);
             }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
         }
-
-        return $this->render('fotoupload', ['model' => $model]);
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 	
 	/**

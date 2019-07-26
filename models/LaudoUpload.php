@@ -19,14 +19,30 @@ class LaudoUpload extends Model
         ];
     }
     
-    public function upload()
+    public function upload($id_consulta)
     {
-        if ($this->validate()) {
-            $url ='../uploads/laudo/' . \Yii::$app->security->generateRandomString() . $this->laudopdf->baseName . \Yii::$app->security->generateRandomString() . '.' . $this->laudopdf->extension;
-            $this->laudopdf->saveAs($url);
-            return true;
-        } else {
+        if($id_consulta == null){
             return false;
         }
+        if ($this->validate()) {
+            $nome = \Yii::$app->security->generateRandomString().$this->laudopdf->baseName.\Yii::$app->security->generateRandomString();
+            $url ='../uploads/laudo/' . $nome . '.' . $this->laudopdf->extension;
+
+            $laudo = Consulta::findOne(['id' => $id_consulta]);
+
+            if($laudo->nomedoarquivo != null){
+                $nome = $laudo->nomedoarquivo;
+                $url ='../uploads/laudo/' . $nome . '.' . $this->laudopdf->extension;
+                $this->laudopdf->saveAs($url);
+                return true;
+            }
+
+            if($laudo->updateAttributes(['nomedoarquivo' => $nome]) > 0)
+            {
+                $this->laudopdf->saveAs($url);
+                return true;
+            }
+        }
+        return false;
     }
 }

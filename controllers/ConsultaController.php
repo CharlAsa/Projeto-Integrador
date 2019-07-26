@@ -13,6 +13,9 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 
+use app\models\LaudoUpload;
+use yii\web\UploadedFile;
+
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
  */
@@ -509,6 +512,38 @@ class ConsultaController extends Controller
         //    'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+	}
+	
+	/**
+     * Upload do laudo da consulta.
+     * 
+     * @return ?
+     */
+    public function actionLaudoupload($id = null)
+    {
+        if(!Yii::$app->user->isGuest){
+            $id_Yii = Yii::$app->user->identity->id_Yii;
+            if($id_Yii == 4)
+			{
+                $model = new LaudoUpload();
+
+                if (Yii::$app->request->isPost) {
+                    $model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
+                    if ($model->upload($id)) {
+						//mostra o laudo
+						
+                        return $this->render('laudoupload', ['model' => $model]);
+                    }
+                }
+                return $this->render('laudoupload', ['model' => $model]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
     }
 
     /**
@@ -525,5 +560,5 @@ class ConsultaController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-    }
+	}
 }

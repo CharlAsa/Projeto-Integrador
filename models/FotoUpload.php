@@ -19,14 +19,29 @@ class FotoUpload extends Model
         ];
     }
     
-    public function upload()
+    public function upload($id_medico)
     {
-        if ($this->validate()) {
-            $url ='../uploads/fotos/' . \Yii::$app->security->generateRandomString() . $this->foto->baseName . \Yii::$app->security->generateRandomString() . '.' . $this->foto->extension;
-            $this->foto->saveAs($url);
-            return true;
-        } else {
+        if($id_medico == null){
             return false;
         }
+        if ($this->validate()) {
+            $nome = \Yii::$app->security->generateRandomString().$this->foto->baseName.\Yii::$app->security->generateRandomString();
+            $url ='../uploads/fotos/' . $nome . '.' . $this->foto->extension;
+            
+            $usuario = Usuario::findOne(['id' => $id_medico]);
+
+            if($usuario->nomedaassinatura != null){
+                $nome = $usuario->nomedaassinatura;
+                $url ='../uploads/fotos/' . $nome . '.' . $this->foto->extension;
+                $this->foto->saveAs($url);
+                return true;
+            }
+
+            if($usuario->updateAttributes(['nomedaassinatura' => $nome]) > 0){
+                $this->foto->saveAs($url);
+                return true;
+            }
+        }
+        return false;
     }
 }
