@@ -32,7 +32,7 @@ class FotoUpload extends Model
 
             if($usuario->nomedaassinatura != null){
                 $nome = $usuario->nomedaassinatura;
-                $url ='../uploads/fotos/' . $nome . '.' . $this->foto->extension;
+                $url ='../uploads/fotos/' . $nome;
                 $this->foto->saveAs($url);
                 return true;
             }

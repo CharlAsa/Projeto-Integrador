@@ -5,6 +5,8 @@ namespace app\models;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
+require_once('../PDF/index.php');
+
 class LaudoUpload extends Model
 {
     /**
@@ -32,14 +34,27 @@ class LaudoUpload extends Model
 
             if($laudo->nomedoarquivo != null){
                 $nome = $laudo->nomedoarquivo;
-                $url ='../uploads/laudo/' . $nome . '.' . $this->laudopdf->extension;
+                $url ='../uploads/laudo/' . $nome;
+
                 $this->laudopdf->saveAs($url);
+
+                $assinatura = $laudo->medico->nomedaassinatura;
+                if($assinatura != null){
+                    JuntarAssinaturaLaudo($nome, $assinatura);
+                }
+
                 return true;
             }
 
             if($laudo->updateAttributes(['nomedoarquivo' => $nome]) > 0)
             {
                 $this->laudopdf->saveAs($url);
+
+                $assinatura = $laudo->Medico->nomedaassinatura;
+                if($assinatura != null){
+                    JuntarAssinaturaLaudo($nome, $assinatura);
+                }
+
                 return true;
             }
         }
