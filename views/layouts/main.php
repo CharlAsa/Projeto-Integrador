@@ -84,6 +84,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     ["label" => "Agendar consulta", "url" => ["consulta/medicoagendaconsulta"]],
                                                     ["label" => "Ver todas as consultas", "url" => ["consulta/index"]],
                                                     ["label" => "Disponibilizar Laudo", "url" => ["laudo/index"]],
+                                                    ["label" => "Upload da Assinatura", "url" => ["usuario/assinaturaupload"]],
                                                 ],
                                             ]
                                         ) : (
