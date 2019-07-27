@@ -54,7 +54,9 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
             [['username', 'password'], 'string', 'max' => 40],
             [['auth_key_Yii', 'access_token_Yii'], 'string', 'max' => 100],
             [['rg'], 'unique'],
-			[['nome'], 'string', 'max' => 45],
+            [['nome'], 'string', 'max' => 45],
+            [['crm'], 'string', 'max' => 9],
+            [['nomedaassinatura'], 'string'],
         ];
     }
 
@@ -93,30 +95,6 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     public function getEnderecos()
     {
         return $this->hasMany(Endereco::className(), ['id_usuario' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMedico()
-    {
-        return $this->hasOne(Medico::className(), ['id_usuario' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPaciente()
-    {
-        return $this->hasOne(Paciente::className(), ['id_usuario' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSecretario()
-    {
-        return $this->hasOne(Secretario::className(), ['id_usuario' => 'id']);
     }
 	
 	public static function findIdentity($id)

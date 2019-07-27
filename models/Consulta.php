@@ -76,22 +76,6 @@ class Consulta extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Usuario::className(), ['id' => 'id_medico']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLaudos()
-    {
-        return $this->hasMany(Laudo::className(), ['id_consulta' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLaudo()
-    {
-        return $this->hasOne(Laudo::className(), ['id_consulta' => 'id']);
-    }
 	
 	public function beforeSave($insert)
     {
