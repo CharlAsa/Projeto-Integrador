@@ -2,7 +2,8 @@
 
 return [
     // string, required, root directory of all source files
-    'sourcePath' => __DIR__ . DIRECTORY_SEPARATOR . '../views',
+    //'sourcePath' => __DIR__ . DIRECTORY_SEPARATOR . '../views',
+    'sourcePath' => __DIR__ . DIRECTORY_SEPARATOR.'..',
     // array, required, list of language codes that the extracted messages
     // should be translated to. For example, ['zh-CN', 'de'].
     'languages' => ['pt-BR'],
@@ -38,6 +39,31 @@ return [
         '.hgignore',
         '.hgkeep',
         '/messages',
+        '/assets',
+        '/commands',
+        '/config',
+        '/mail',
+        '/controllers',
+        '/migrations',
+        '/PDF',
+        '/tests',
+        '/uploads',
+        '/vagrant',
+        '/vendor',
+        '/web',
+        '/widgets',
+        'composer.json',
+        'codeception.yml',
+        'composer.lock',
+        'composer.phar',
+        'docker-compose.yml',
+        'INFORMAÇÕES.txt',
+        'LICENSE.md',
+        'README.md',
+        'requirements.php',
+        'Vagrantfile',
+        'yii',
+        'yii.bat',
     ],
 
     // 'php' output format is for saving messages to php files.
