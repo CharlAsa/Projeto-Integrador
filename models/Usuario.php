@@ -92,9 +92,25 @@ class Usuario extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getContato()
+    {
+        return $this->hasOne(Contato::className(), ['id_usuario' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEnderecos()
     {
         return $this->hasMany(Endereco::className(), ['id_usuario' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEndereco()
+    {
+        return $this->hasOne(Endereco::className(), ['id_usuario' => 'id']);
     }
 	
 	public static function findIdentity($id)
