@@ -12,10 +12,10 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
 		
     ],
-	
+	'language' => 'pt-BR',
+    'sourceLanguage' => 'en-US',
 	
     'components' => [
-		
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'iam9TmJBfiWyxPWfOsrl7e7-KZbRndeL',
@@ -52,7 +52,8 @@ $config = [
             'translations' => [
                 'app*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    //'basePath' => '@app/messages',
+                    'basePath' => '@app/messages',
+                    //'basePath' => __DIR__.'/../messages',
                     'sourceLanguage' => 'en-US',
                     'fileMap' => [
                         'app' => 'app.php',
