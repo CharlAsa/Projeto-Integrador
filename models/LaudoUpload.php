@@ -50,7 +50,7 @@ class LaudoUpload extends Model
             {
                 $this->laudopdf->saveAs($url);
 
-                $assinatura = $laudo->Medico->nomedaassinatura;
+                $assinatura = $laudo->medico->nomedaassinatura;
                 if($assinatura != null){
                     JuntarAssinaturaLaudo($nome, $assinatura);
                 }
