@@ -183,12 +183,6 @@ class UsuarioController extends Controller
                                 //$model2->id_usuario = $model->id;
                                 //$model2->save();
                             //}
-                            if($model->id_Yii != 4){
-                                $m = Medico::findOne($model->id);
-                                if($m != null){
-                                    $m->delete();
-                                }
-                            }
                             return $this->redirect(['view', 'id' => $model->id]);
                         }
                     }
