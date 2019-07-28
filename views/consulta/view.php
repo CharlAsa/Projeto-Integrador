@@ -36,22 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <?php
-        if($model->laudos != null){
-            echo '<h3> Resultado da consulta </h3>';
-            echo DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    'laudo.oe',
-                    'laudo.od',
-                    'laudo.dp', 
-                    'laudo.lentes', 
-                    'laudo.observacoes',
-                    'laudo.nova_consulta',
-                ],
-            ]);
-        }
+    <?php if($model->nomedoarquivo != null) { ?>
 
-    ?>
+        <h2> Laudo já disponível, clique no botão abaixo para fazer download: </h2>
+        <?= Html::a(Yii::t('app', 'Download'), ['download', 'id_consulta' => $model->id], ['class' => 'btn btn-info']) ?>
+
+    <?php } else{ ?>
+        <h2> Laudo não disponível para download ou a consulta ainda não foi realizada. </h2>
+    <?php } ?>
 
 </div>

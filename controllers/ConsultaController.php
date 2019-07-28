@@ -15,7 +15,6 @@ use yii\data\ActiveDataProvider;
 
 use app\models\LaudoUpload;
 use yii\web\UploadedFile;
-
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
  */
@@ -261,7 +260,46 @@ class ConsultaController extends Controller
 		else{
 			return $this->redirect(['site/login']);
 		}
-    }
+	}
+	
+	/**
+     * Deletes an existing Consulta model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDownload($id_consulta = null, $id_paciente = null)
+    {
+		if(!Yii::$app->user->isGuest){
+			$id_Yii = Yii::$app->user->identity->id_Yii;
+			if($id_Yii == 2)
+			{
+				if($id_consulta == null){
+					return $this->redirect(['consulta/index']);
+				}
+
+				if($id_Yii == 2){
+					$id_paciente = Yii::$app->user->identity->id;
+				}
+
+				$consulta = $this->findModel($id_consulta);
+				if($id_Yii == 2 && $consulta->id_paciente != $id_paciente){
+					return $this->redirect(['consulta/index']);
+				}
+
+				$nome = $consulta->nomedoarquivo;
+
+				return Yii::$app->response->sendFile('../uploads/laudo/'.$nome);
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+		}
+		else{
+			return $this->redirect(['site/login']);
+		}
+	}
 	
 	/**
      * Creates a new Consulta model.
