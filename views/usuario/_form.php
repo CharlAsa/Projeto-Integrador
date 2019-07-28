@@ -6,9 +6,12 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Usuario */
 /* @var $form yii\widgets\ActiveForm */
-if($model2->crm == null){
+//if($model2->crm == null){
+/*if(!isset($model2->crm)){
+    $model2 = new app\models\Medico();
     $model2->crm = '0';
-}
+}*/
+
 ?>
 
 <div class="usuario-form">
@@ -23,7 +26,7 @@ if($model2->crm == null){
 
 	<?= $form->field($model, 'sexo')
         ->dropDownList(
-            ['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro']           // Flat array ('id'=>'label') or $items
+            ['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
             //['prompt'=>'']    // options
         ); ?>
 	
@@ -52,10 +55,12 @@ if($model2->crm == null){
                     document.getElementById("medico-crm").value = "0";
                 }
             ']
-        )->label('Tipo de Usuário');
+        );
     ?>
 
-    <?= $form->field($model2, 'crm',  $model2->crm == '0' ? [ 'options' => [ 'style' => 'visibility: hidden;']] : [ 'options' => [ 'style' => 'visibility: visible;']] )->textInput(['maxlength' => true])->label('CRM') ?>
+    <?php //$form->field($model2, 'crm',  $model2->crm == '0' ? [ 'options' => [ 'style' => 'visibility: hidden;']] : [ 'options' => [ 'style' => 'visibility: visible;']] )->textInput(['maxlength' => true])->label('CRM') ?>
+
+    <?= $form->field($model, 'crm',  $model->crm == null ? [ 'options' => [ 'style' => 'visibility: hidden;']] : [ 'options' => [ 'style' => 'visibility: visible;']] )->textInput(['maxlength' => true])->label('CRM') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
