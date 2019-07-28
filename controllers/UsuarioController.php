@@ -342,7 +342,41 @@ class UsuarioController extends Controller
 			return $this->redirect(['site/login']);
 		}
     }
-	
+    
+    /**
+     * Deletes an existing Consulta model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDownload($id_usuario = null)
+    {
+		if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 4)
+			{
+                if($id_usuario == null){
+                    if(Yii::$app->user->identity->id_Yii == 2){
+                        return $this->redirect(['site/index']);
+                    }
+
+                    $nome = Yii::$app->user->identity->nomedaassinatura;
+
+                    return Yii::$app->response->sendFile('../uploads/fotos/'.$nome);
+                }
+                else{
+                    throw new NotFoundHttpException(Yii::t('app', 'Não foi implementado.'));
+                }
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+		}
+		else{
+			return $this->redirect(['site/login']);
+		}
+	}
+
 	/**
      * Displays a single Usuario model.
      * @param integer $id

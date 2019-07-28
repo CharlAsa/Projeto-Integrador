@@ -13,6 +13,7 @@ use yii\web\UploadedFile;
     //$imageData = base64_encode(file_get_contents($url));
     //$foto = 'data: '.mime_content_type($url).';base64,'.$imageData;
 //}
+use yii\helpers\Html;
 ?>
 
 <?php if (Yii::$app->session->hasFlash('success')): ?>
@@ -40,3 +41,20 @@ use yii\web\UploadedFile;
 <?php ActiveForm::end() ?>
 
 <?php //echo '<img src="' . $foto . '" width="800px" height="600px">'; ?>
+
+<?php if(Yii::$app->user->identity->nomedaassinatura != null) { ?>
+
+<h2> Já fez o upload da assinatura se fazer novamente, vai sobrescrever, para acessar clique no botão abaixo: </h2>
+<?= Html::a(Yii::t('app', 'Download'), ['download'], ['class' => 'btn btn-info']) ?>
+
+<?php 
+    //'../uploads/fotos/'.Yii::$app->user->identity->nomedaassinatura
+    $foto = 'data: '.mime_content_type('../uploads/fotos/'.Yii::$app->user->identity->nomedaassinatura).';base64,'.base64_encode(file_get_contents('../uploads/fotos/'.Yii::$app->user->identity->nomedaassinatura));
+    echo '<br>';
+    echo '<h2> Assinatura atual: </h2>';
+    echo '<img src="' . $foto . '" width="480px" height="240px">';
+?>
+
+<?php } else{ ?>
+<h2> Ainda não fez o upload da assinatura, por favor faça o quanto antes. </h2>
+<?php } ?>
