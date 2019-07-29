@@ -312,33 +312,35 @@ class ConsultaController extends Controller
 			if(Yii::$app->user->identity->id_Yii == 4)
 			{
 				$model = new Consulta();
+				$param1 = Yii::$app->request->post('param1', null);
+				//if(!Yii::$app->request->isAjax){
+				if($param1 == null){
+					if ($model->load(Yii::$app->request->post())) {
+						$model->id_medico = Yii::$app->user->identity->id;
+						$model->estado = 'a';
 
-				if ($model->load(Yii::$app->request->post()) && !Yii::$app->request->isAjax) {
-					$model->id_medico = Yii::$app->user->identity->id;
-					$model->estado = 'a';
+						//checa se existe outra consulta do paciente no mesmo horário
+						$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
 
-					//checa se existe outra consulta do paciente no mesmo horário
-					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
-
-					$c = (new \yii\db\Query())
-					->from('consulta')
-					->where(['id_medico' => $model->id_medico])
-					->andWhere(['id_paciente'=>$model->id_paciente])
-					->andWhere(['between', 'data_consulta', $aux, $aux])
-					->andWhere(['horario'=>$model->horario])
-					->count();
-					if($c == 0){
-						if($model->save()){
-							return $this->redirect(['view', 'id' => $model->id]);
+						$c = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['id_paciente'=>$model->id_paciente])
+						//->andWhere(['between', 'data_consulta', $aux, $aux])
+						//->andWhere(['horario'=>$model->horario])
+						->andWhere(['estado'=>'a'])
+						->count();
+						if($c == 0){
+							if($model->save()){
+								return $this->redirect(['view', 'id' => $model->id]);
+							}
 						}
-					}
-					else{
-						return $this->redirect(['index']);
+						else{
+							return $this->redirect(['index']);
+						}
 					}
 				}
 
-				$param1 = null;
-				$param1 = Yii::$app->request->post('param1', null);
 				$param2 = Yii::$app->request->post('param2', null);
 
 				$v["valor"] = null;
@@ -375,7 +377,7 @@ class ConsultaController extends Controller
 					else if(strlen($param1) == 10 && $param2 == 3){
 						$param1 = str_replace('/', '-', $param1);
 						$param1 = date("Y-m-d", strtotime($param1));	
-						$v["valor"] = array('7:00'=>'7:00', '8:00'=>'8:00');
+						$v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
 						$v["op"] = 2;
 						$temp = (new \yii\db\Query())
 						->select('horario')
