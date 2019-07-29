@@ -273,7 +273,7 @@ class ConsultaController extends Controller
     {
 		if(!Yii::$app->user->isGuest){
 			$id_Yii = Yii::$app->user->identity->id_Yii;
-			if($id_Yii == 2)
+			if($id_Yii == 2 || $id_Yii == 4)
 			{
 				if($id_consulta == null){
 					return $this->redirect(['consulta/index']);
@@ -313,7 +313,7 @@ class ConsultaController extends Controller
 			{
 				$model = new Consulta();
 
-				if ($model->load(Yii::$app->request->post())) {
+				if ($model->load(Yii::$app->request->post()) && !Yii::$app->request->isAjax) {
 					$model->id_medico = Yii::$app->user->identity->id;
 					$model->estado = 'a';
 
@@ -337,6 +337,7 @@ class ConsultaController extends Controller
 					}
 				}
 
+				$param1 = null;
 				$param1 = Yii::$app->request->post('param1', null);
 				$param2 = Yii::$app->request->post('param2', null);
 
@@ -345,12 +346,12 @@ class ConsultaController extends Controller
 
 				$u = "o";
 
-				//Yii::trace($param1);
+				Yii::trace(Yii::$app->request->post('param1'));
 
 				//$model->horario = $u;
 
 				if($param1 != null){ 
-					if(strlen($param1) == 10){
+					if(strlen($param1) == 10 && $param2 == 2){
 						$param1 = str_replace('/', '-', $param1);
 						$param1 = date("Y-m-d", strtotime($param1));					
 						$v["valor"] = (new \yii\db\Query())
@@ -370,6 +371,25 @@ class ConsultaController extends Controller
 						->count();
 						$v["op"] = 1;
 						$model->horario = $param1;
+					}
+					else if(strlen($param1) == 10 && $param2 == 3){
+						$param1 = str_replace('/', '-', $param1);
+						$param1 = date("Y-m-d", strtotime($param1));	
+						$v["valor"] = array('7:00'=>'7:00', '8:00'=>'8:00');
+						$v["op"] = 2;
+						$temp = (new \yii\db\Query())
+						->select('horario')
+						->from('consulta')
+						->where(['id_medico' => Yii::$app->user->identity->id])
+						->andWhere(['estado'=>'a'])
+						->andWhere(['between', 'data_consulta', $param1, $param1])
+						->All();
+						foreach($temp as $r){
+							if(in_array($r["horario"], $v["valor"])){
+								unset($v["valor"][$r["horario"]]);
+							}
+						}
+						$model->horario = null;
 					}
 				}
 

@@ -10,6 +10,8 @@ use kartik\date\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Consulta */
 /* @var $form yii\widgets\ActiveForm */
+//$hour = array('17:00' => '17:00', '18:00' => '18:00');
+//$hour['19:00'] = '19:00';
 ?>
 
 <div class="consulta-form">
@@ -62,7 +64,7 @@ use kartik\date\DatePicker;
 			'language' => 'pt',
 			'options' => [
 				'placeholder' => 'Escolha a data da consulta...',
-				'onchange'=>'
+				/*'onchange'=>'
 					var k = document.getElementById("aff");
 					k.dataset.params =
 					"{"
@@ -74,6 +76,23 @@ use kartik\date\DatePicker;
 					+"}";
 					
 					document.getElementById("aff").click();
+				'*/
+				'onchange'=>'
+					var k = document.getElementById("affs");
+					k.dataset.params =
+					"{"
+					+"\"param1\":"
+					+"\""
+					+$(this).val()
+					+"\""
+					+",\"param2\":3"
+					+",\"param3\":"
+					+"\""
+					+$(this).val()
+					+"\""
+					+"}";	
+
+					document.getElementById("affs").click();
 				'
 				],
 			'pluginOptions' => [
@@ -83,44 +102,31 @@ use kartik\date\DatePicker;
 		])
 		
 	?>
+
+	<?php Pjax::begin(['timeout'=>false, 'id'=>'a']) ?>
+
+	<?php if($v["op"] == 2){ ?>
+	<?= $form->field($model, 'horario')
+        ->dropDownList(
+			$v["valor"],
+            //['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
+            //['prompt'=>'']    // options
+    ); ?>
+	<?php } ?>
+
+	<?= Html::a('', 
+	['consulta/medicoagendaconsulta'], [
+	'data-method' => 'POST',
+	'data-params' => [
+		'param1' => 1,
+		'param2' => 1,
+	],
+	'data-pjax' => 1,
+	'id'=>'affs',
+	]) ?>
+
+	<?php Pjax::end() ?>
 	
-	<?= $form->field($model, 'horario')->widget(\yii\widgets\MaskedInput::className(), [
-    //'mask' => 'hh:mm'])
-	'mask' => 'h:m',
-		'definitions'=>[
-			'h'=>[
-				'cardinality'=>2,
-				'prevalidator' => [
-					['validator'=>'^([0-2])$', 'cardinality'=>1],
-					['validator'=>'^([0-9]|0[0-9]|1[0-9]|2[0-3])$', 'cardinality'=>2],
-				],
-				'validator'=>'^([0-9]|0[0-9]|1[0-9]|2[0-3])$'
-			],
-			'm'=>[
-				'cardinality'=>2,
-				'prevalidator' => [
-					['validator'=>'^(0|[0-5])$', 'cardinality'=>1],
-					['validator'=>'^([0-5]?\d)$', 'cardinality'=>2],
-				]
-			]
-		],
-		'options' => [
-			'onchange'=>'
-				var k = document.getElementById("aff");
-				k.dataset.params =
-				"{"
-				+"\"param1\":"
-				+"\""
-				+$(this).val().replace(":",".")
-				+"\""
-				+",\"param2\":2"
-				+"}";
-				
-				document.getElementById("aff").click();
-			'
-		]
-		])
-	->label('Horario da consulta') ?>
 	
 	<?= Html::radioList('nomedaclasse', [16, 42],
 		['N' => 'Não-Reservado', 'M' => 'Manhã', 'T' => 'Tarde'],
@@ -154,7 +160,7 @@ use kartik\date\DatePicker;
 				}
 			}
 		',
-		'id'=>'radiodafuq']
+		'id'=>'radiodafuq'],
 		)
 	?>	
 
@@ -164,7 +170,7 @@ use kartik\date\DatePicker;
 
     <?php ActiveForm::end(); ?>
 
-	<?php Pjax::begin(['timeout'=>false, 'id'=>'a']) ?>
+	<?php Pjax::begin(['timeout'=>false, 'id'=>'b']) ?>
 
 	<?php
 		if($v["valor"] != null){
