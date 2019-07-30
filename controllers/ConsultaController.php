@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\ConsultaFake;
 use app\models\Consulta;
 use app\models\ConsultaSearch;
 use app\models\Usuario;
@@ -287,8 +288,7 @@ class ConsultaController extends Controller
     public function actionDownload($id_consulta = null, $id_paciente = null)
     {
 		if(!Yii::$app->user->isGuest){
-			$id_Yii = Yii::$app->user->identity->id_Yii;
-			if($id_Yii == 2 || $id_Yii == 4)
+			if(Yii::$app->user->identity->id_Yii == 2 || Yii::$app->user->identity->id_Yii == 4)
 			{
 				if($id_consulta == null){
 					return $this->redirect(['consulta/index']);
@@ -302,6 +302,37 @@ class ConsultaController extends Controller
 				if($id_Yii == 2 && $consulta->id_paciente != $id_paciente){
 					return $this->redirect(['consulta/index']);
 				}
+
+				$nome = $consulta->nomedoarquivo;
+
+				return Yii::$app->response->sendFile('../uploads/laudo/'.$nome);
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+		}
+		else{
+			return $this->redirect(['site/login']);
+		}
+	}
+
+	/**
+     * Deletes an existing Consulta model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUltimaconsultadownload()
+    {
+		if(!Yii::$app->user->isGuest){
+			if(Yii::$app->user->identity->id_Yii == 2 )
+			{
+				$id_paciente = Yii::$app->user->identity->id;
+
+				$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
+
+				//yii::trace();
 
 				$nome = $consulta->nomedoarquivo;
 
@@ -616,10 +647,75 @@ class ConsultaController extends Controller
 					}
 					else{
 						Yii::$app->session->setFlash('error', "Upload do laudo falhou.");
-						return $this->render('fotoupload', ['model' => $model]);
+						return $this->render('laudoupload', ['model' => $model]);
 					}
                 }
                 return $this->render('laudoupload', ['model' => $model]);
+            }
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
+	}
+	
+	/**
+     * Upload do laudo da consulta utilizando o id do paciente.
+     * 
+     * @return ?
+     */
+    public function actionDisponibilizarlaudo($id = null)
+    {
+        if(!Yii::$app->user->isGuest){
+            $id_Yii = Yii::$app->user->identity->id_Yii;
+            if($id_Yii == 4)
+			{
+                $model = new LaudoUpload();
+				$model2 = new ConsultaFake();
+
+                if (Yii::$app->request->isPost) {
+					$model2 = Yii::$app->request->post('model2', null);
+					if($model2 != null){
+						$model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
+						if ($model->upload($id)) {
+							//mostra o laudo
+							$paciente = Usuario::find()->where(["id" => $model2->id_paciente])->one();
+							$paciente->updateAttributes(['agendamento_consulta' => '1']);
+
+							Yii::$app->session->setFlash('success', "Upload do laudo foi um sucesso.");
+							return $this->render('disponibilizarlaudo', ['model' => $model]);
+						}
+						else{
+							Yii::$app->session->setFlash('error', "Upload do laudo falhou.");
+							return $this->render('disponibilizarlaudo', ['model' => $model]);
+						}
+					}
+					else{
+						yii::trace($model2);
+						$model2 = new ConsultaFake();
+					}
+				}
+				
+				$linhas = (new \yii\db\Query())
+				->select(['id', 'nome'])
+				->from('usuario')
+				->where(['id_Yii' => 2])
+				->andWhere(['agendamento_consulta' => '0'])
+				//->orwhere(['id_Yii'=>3])
+				//->orwhere(['id_Yii'=>6])
+				//->orwhere(['id_Yii'=>7])
+				->all();
+
+				$usuario = ArrayHelper::map(
+					$linhas,
+					'id',
+					'nome'
+				);
+
+
+                return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
             }
 			else{
 				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));

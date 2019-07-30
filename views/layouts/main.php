@@ -83,7 +83,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                 "items" => [
                                                     ["label" => "Agendar consulta", "url" => ["consulta/medicoagendaconsulta"]],
                                                     ["label" => "Ver todas as consultas", "url" => ["consulta/index"]],
-                                                    ["label" => "Disponibilizar Laudo", "url" => ["laudo/index"]],
+                                                    ["label" => "Disponibilizar Laudo", "url" => ["consulta/disponibilizarlaudo"]],
                                                     ["label" => "Upload da Assinatura", "url" => ["usuario/assinaturaupload"]],
                                                 ],
                                             ]
@@ -95,7 +95,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     "url" => "#",
                                                     "items" => [
                                                         ["label" => "Ver consultas", "url" => ["consulta/index"]],
-                                                        ["label" => "Ver laudo", "url" => ["laudo/index"]],
+                                                        ["label" => "Emitir laudo da ultima consulta", "url" => ["consulta/ultimaconsultadownload"]],
                                                     ],
                                                 ]
                                             ) : (
