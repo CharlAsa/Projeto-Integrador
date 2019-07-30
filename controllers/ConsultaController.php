@@ -99,6 +99,11 @@ class ConsultaController extends Controller
 				$model = new Consulta();
 
 				if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+					$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
+
+                    $paciente->updateAttributes(['agendamento_consulta' => '0']);
+
 					return $this->redirect(['view', 'id' => $model->id]);
 				}
 
@@ -249,6 +254,16 @@ class ConsultaController extends Controller
 					return $this->redirect(['index']);
 				}
 
+
+        		$consultaAgendada = Consulta::find()->where(["id" => $id])->one();
+
+
+
+				$usuario = Usuario::find()->where(["id" => $consultaAgendada->id_paciente])->one();
+			
+
+				$usuario->updateAttributes(['agendamento_consulta' => '1']);
+
 				$this->findModel($id)->delete();
 
 				return $this->redirect(['index']);
@@ -332,6 +347,10 @@ class ConsultaController extends Controller
 						->count();
 						if($c == 0){
 							if($model->save()){
+								$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
+
+								$paciente->updateAttributes(['agendamento_consulta' => '0']);
+								
 								return $this->redirect(['view', 'id' => $model->id]);
 							}
 						}
@@ -399,6 +418,7 @@ class ConsultaController extends Controller
 				->select(['id', 'nome'])
 				->from('usuario')
 				->where(['id_Yii' => 2])
+				->andWhere(['agendamento_consulta' => '1'])
 				//->orwhere(['id_Yii'=>3])
 				//->orwhere(['id_Yii'=>6])
 				//->orwhere(['id_Yii'=>7])

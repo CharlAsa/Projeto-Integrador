@@ -109,6 +109,9 @@ class UsuarioController extends Controller
                 //$model2 = new Medico();
 
                 if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())) {
+
+                    $model->agendamento_consulta = '1';
+
                     if($model->save())
                     {
                         $arrayContato->id_usuario = $model->id; 

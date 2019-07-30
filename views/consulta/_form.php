@@ -108,7 +108,7 @@ use kartik\date\DatePicker;
 	<?php if($v["op"] == 2){ ?>
 	<?= $form->field($model, 'horario')
         ->dropDownList(
-			$v["valor"],
+			$v["valor"]
             //['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
             //['prompt'=>'']    // options
     ); ?>
@@ -160,7 +160,7 @@ use kartik\date\DatePicker;
 				}
 			}
 		',
-		'id'=>'radiodafuq'],
+		'id'=>'radiodafuq']
 		)
 	?>	
 
