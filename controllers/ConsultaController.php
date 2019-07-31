@@ -666,7 +666,7 @@ class ConsultaController extends Controller
      * 
      * @return ?
      */
-    public function actionDisponibilizarlaudo($id = null)
+    public function actionDisponibilizarlaudo()
     {
         if(!Yii::$app->user->isGuest){
             $id_Yii = Yii::$app->user->identity->id_Yii;
@@ -675,29 +675,51 @@ class ConsultaController extends Controller
                 $model = new LaudoUpload();
 				$model2 = new ConsultaFake();
 
-                if (Yii::$app->request->isPost) {
-					$model2 = Yii::$app->request->post('model2', null);
+				
+
+                if ($model2->load(Yii::$app->request->post())) {
+					//$model->load(Yii::$app->request->post());
+					//$model2->load(Yii::$app->request->post());
 					if($model2 != null){
+						$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
 						$model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
-						if ($model->upload($id)) {
+						if ($model->upload($consulta->id)) {
 							//mostra o laudo
-							$paciente = Usuario::find()->where(["id" => $model2->id_paciente])->one();
-							$paciente->updateAttributes(['agendamento_consulta' => '1']);
+							//$paciente = Usuario::find()->where(["id" => $model2->id_paciente])->one();
+							//$paciente->updateAttributes(['agendamento_consulta' => '1']);
 
 							Yii::$app->session->setFlash('success', "Upload do laudo foi um sucesso.");
-							return $this->render('disponibilizarlaudo', ['model' => $model]);
 						}
 						else{
 							Yii::$app->session->setFlash('error', "Upload do laudo falhou.");
-							return $this->render('disponibilizarlaudo', ['model' => $model]);
 						}
+
+						$linhas = (new \yii\db\Query())
+						->select(['id', 'nome'])
+						->from('usuario')
+						->where(['id_Yii' => 2])
+						->andWhere(['agendamento_consulta' => '0'])
+						//->orwhere(['id_Yii'=>3])
+						//->orwhere(['id_Yii'=>6])
+						//->orwhere(['id_Yii'=>7])
+						->all();
+		
+						$usuario = ArrayHelper::map(
+							$linhas,
+							'id',
+							'nome'
+						);
+
+						Yii::trace($usuario);
+
+
+               			return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
 					}
 					else{
-						yii::trace($model2);
 						$model2 = new ConsultaFake();
 					}
 				}
-				
+
 				$linhas = (new \yii\db\Query())
 				->select(['id', 'nome'])
 				->from('usuario')
@@ -713,7 +735,6 @@ class ConsultaController extends Controller
 					'id',
 					'nome'
 				);
-
 
                 return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
             }

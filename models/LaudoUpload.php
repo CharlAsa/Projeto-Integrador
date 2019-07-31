@@ -31,6 +31,8 @@ class LaudoUpload extends Model
             $url ='../uploads/laudo/' . $nome;
 
             $laudo = Consulta::findOne(['id' => $id_consulta]);
+            $paciente = Usuario::find()->limit(1)->where(["id" => $laudo->id_paciente])->one();
+			$paciente->updateAttributes(['agendamento_consulta' => '1']);
 
             if($laudo->nomedoarquivo != null){
                 $nome = $laudo->nomedoarquivo;
