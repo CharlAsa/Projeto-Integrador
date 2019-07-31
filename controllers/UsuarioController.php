@@ -247,32 +247,34 @@ class UsuarioController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCadastrarpaciente()
+    public function actionCadastrar()
     {
-		if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 1){
+		if(Yii::$app->user->isGuest){
 				$model = new Usuario();
 				$model2 = new Contato();
 				$model3 = new Endereco();
 
 
-				if ($model->load(Yii::$app->request->post())) {
-					$model->id_Yii = 2;
-					//Inserir também na tabela paciente
-					
+				if ($model->load(Yii::$app->request->post()) &&  $model2->load(Yii::$app->request->post()) && $model3->load(Yii::$app->request->post())) {
+                    $model->id_Yii = 2;
+
+                    $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
+                    
+                    $transaction = Yii::$app->db->beginTransaction();
 					if($model->save()){
-						$p = new Paciente();
-						$p->id_usuario = $model->id;
-						$p->save();
-						
 						$model2->id_usuario = $model->id;
-						$model2->save();
-						
-						$model3->id_usuario = $model->id;
-						$model3->save();
-						
-						return $this->redirect(['view', 'id' => $model->id]);
-					}
+                        if($model2->save()){     
+                            $model3->id_usuario = $model->id;
+                            if($model3->save()){ 
+                                $transaction->commit();
+                                //Yii::$app->session->setFlash('success', "Cadastro realizado com sucesso.");
+                                return $this->redirect(['site/login']);
+                            }
+                        }
+                    }
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', "Ocorreu um erro ao se cadastrar, por favor cadastre-se novamente.");
+                    //return $this->redirect(['usuario/cadastrar']);
 				}
 
 				return $this->render('cadastrarpaciente', [
@@ -280,13 +282,9 @@ class UsuarioController extends Controller
 					'model2' => $model2,
 					'model3' => $model3,
 				]);
-			}
-			else {
-				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
-			}
 		}
 		else{
-			return $this->redirect(['site/login']);
+			return $this->redirect(['site/index']);
 		}
     }
 

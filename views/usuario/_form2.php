@@ -31,6 +31,25 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true])->label('Senha') ?>
 
+    
+    <?= $form->field($model3, 'logradouro')->textinput(['maxlength' => true]) ?>
+
+    <?= $form->field($model3, 'bairro')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model3, 'cidade')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model3, 'uf')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model3, 'cep')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model3, 'numero_casa')->textInput(['maxlength' => true]) ?>
+
+
+    <?= $form->field($model2, 'numero_telefone')->textinput(['maxlength' => true]) ?>
+
+    <?= $form->field($model2, 'email')->textinput(['maxlength' => true]) ?>
+
+
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
