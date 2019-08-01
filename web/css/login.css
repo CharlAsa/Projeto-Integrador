@@ -114,6 +114,7 @@ a {
 
 div.col-lg-8{
     text-align: center;
+    width: 100%;
 }
 
 div.col-lg-3 {
@@ -122,5 +123,18 @@ div.col-lg-3 {
 
 .col-lg-offset-1.col-lg-3{
     padding-top: 0px;
+    padding-right: 0px;
     float:left;
+    width:80%;
+}
+
+.fudeu{
+    float:right;
+    position: relative;
+}
+
+.cadastrarpacientes{
+    color: blue;
+    text-align:right;
+    width:50%;
 }
