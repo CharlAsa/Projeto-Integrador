@@ -38,7 +38,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
             <div class="left_col scroll-view">
 
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Edite me!</span></a>
+                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span></span></a>
                 </div>
                 <div class="clearfix"></div>
 
