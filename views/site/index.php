@@ -13,8 +13,22 @@ $this->registerCssFile(
     '@web/css/calendario.css',
 );
 
+$lil = 1;
+
+$this->registerJsFile(
+    '@web/js/dafuq.js',
+);
+
 ?>
 <div class="site-index">
+
+    <?php if (Yii::$app->session->hasFlash('warn')): ?>
+        <div class="alert alert-warning alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-check"></i>Erro!</h4>
+            <?= Yii::$app->session->getFlash('error') ?>
+        </div>
+    <?php endif; ?>
 
     <!-- <div class="jumbotron">
         <h1>Congratulations!</h1>
@@ -109,10 +123,10 @@ $this->registerCssFile(
     <?php if($tempo["op"] == 1) { ?>
         <table class="tabela">
                 <tr>
-                    <td colspan="7" class="car_bloco_ano_nome"> <?php echo $tempo["valor"]["ano"]; ?> </td>
+                    <td colspan="7" class="car_bloco_ano_nome" id="ano"> <?php echo $tempo["valor"]["ano"]; ?> </td>
                 </tr>
                 <tr>
-                    <td colspan="7" class="car_bloco_mes_nome"> <?php echo ($tempo["valor"]["mes"] == 1) ? ( "Janeiro" ) : ($tempo["valor"]["mes"] == 2 ? ( "Fevereiro" ) : ($tempo["valor"]["mes"] == 3 ? ( "Março" ) : ($tempo["valor"]["mes"] == 4 ? ( "Abril" ) : ($tempo["valor"]["mes"] == 5 ? ( "Maio" ) : ($tempo["valor"]["mes"] == 6 ? ( "Junho" ) : ($tempo["valor"]["mes"] == 7 ? ( "Julho" ) : ($tempo["valor"]["mes"] == 8 ? ( "Agosto" ) : ($tempo["valor"]["mes"] == 9 ? ( "Setembro" ) : ($tempo["valor"]["mes"] == 10 ? ( "Outubro" ) : ($tempo["valor"]["mes"] == 11 ? ( "Novembro" ) : ($tempo["valor"]["mes"] == 12 ? ( "Dezembro" ) : "")))))))))))  ?> </td>
+                    <td colspan="7" class="car_bloco_mes_nome" id="mes"> <?php echo ($tempo["valor"]["mes"] == 1) ? ( "Janeiro" ) : ($tempo["valor"]["mes"] == 2 ? ( "Fevereiro" ) : ($tempo["valor"]["mes"] == 3 ? ( "Março" ) : ($tempo["valor"]["mes"] == 4 ? ( "Abril" ) : ($tempo["valor"]["mes"] == 5 ? ( "Maio" ) : ($tempo["valor"]["mes"] == 6 ? ( "Junho" ) : ($tempo["valor"]["mes"] == 7 ? ( "Julho" ) : ($tempo["valor"]["mes"] == 8 ? ( "Agosto" ) : ($tempo["valor"]["mes"] == 9 ? ( "Setembro" ) : ($tempo["valor"]["mes"] == 10 ? ( "Outubro" ) : ($tempo["valor"]["mes"] == 11 ? ( "Novembro" ) : ($tempo["valor"]["mes"] == 12 ? ( "Dezembro" ) : "")))))))))))  ?> </td>
                 </tr>
                 <tr> 
                     <td class="car_bloco_dias_nome"> Domingo </td> 
@@ -125,8 +139,8 @@ $this->registerCssFile(
                 </tr>
                 <?php for($con = 0; $con < 6; $con++){ ?>
                     <tr>
-                        <?php for($cons = $con * 7; $cons < ($con * 7) + 7; $cons++) { ?> 
-                            <td class="car_bloco_numero_nome"> <?php echo $tempo["valor"][$cons]; ?> </td> 
+                        <?php for($cons = $con * 7; $cons < ($con * 7) + 7; $cons++) { ?>
+                                <td class="car_bloco_numero_nome" id="<?php if($tempo["valor"][$cons] != null){ echo $lil; $lil++; } else{echo -1;} ?>" onclick="evento(this)"> <?php echo $tempo["valor"][$cons]; ?> </td> 
                         <?php } ?>
                     </tr>
                 <?php } ?>
@@ -134,4 +148,9 @@ $this->registerCssFile(
 
     <?php }?>
 <?php } ?>
+
+<div>
+
+</div>
+
 </div>
