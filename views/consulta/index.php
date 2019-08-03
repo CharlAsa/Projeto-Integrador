@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php  
             if(Yii::$app->user->isGuest == false){ if(Yii::$app->user->identity->id_Yii != 2){
         ?>
-            <?= Html::a(Yii::t('app', 'Agendar consulta'), ['create'], ['class' => 'btn btn-success']) ?>
+            <?= Html::a(Yii::t('app', 'Agendar consulta'), ['consulta/medicoagendaconsulta'], ['class' => 'btn btn-success']) ?>
         <?php }}  ?>
     </p>
 
