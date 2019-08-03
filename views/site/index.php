@@ -3,8 +3,16 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Url;
+use yii\helpers\html;
+
+use marekpetras\calendarview\CalendarView;
 
 $this->title = 'My Yii Application';
+
+$this->registerCssFile(
+    '@web/css/calendario.css',
+);
+
 ?>
 <div class="site-index">
 
@@ -59,28 +67,71 @@ $this->title = 'My Yii Application';
 
     </div>
     -->
+    <!--
+    <div class="container">
+        <h2>Carousel Example</h2>  
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <!--<ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
 
-    <div class="body-content">
-
-        <div id = "topo" class="row">
-            <div class="col-lg-4">
-
+        <!-- Wrapper for slides -->
+        <!--<div class="carousel-inner">
+            <div class="item active">
+            <img src='img/img1.jpg' alt="Los Angeles">
             </div>
-            <div class="col-lg-4">
-                
+
+            <div class="item">
+            <img src='img/img2.jpg' alt="Chicago">
             </div>
-            <div class="col-lg-4">
-                
+
+            <div class="item">
+            <img src='img/img4.BMP' alt="New York">
             </div>
         </div>
 
-        <div id="conteudo" class="row">
-            
+        <!-- Left and right controls -->
+        <!--<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span>
+        </a>
+        
         </div>
+    </div> -->
+<?php if($tempo != null){ ?>
+    <?php if($tempo["op"] == 1) { ?>
+        <table class="tabela">
+                <tr>
+                    <td colspan="7" class="car_bloco_ano_nome"> <?php echo $tempo["valor"]["ano"]; ?> </td>
+                </tr>
+                <tr>
+                    <td colspan="7" class="car_bloco_mes_nome"> <?php echo ($tempo["valor"]["mes"] == 1) ? ( "Janeiro" ) : ($tempo["valor"]["mes"] == 2 ? ( "Fevereiro" ) : ($tempo["valor"]["mes"] == 3 ? ( "Março" ) : ($tempo["valor"]["mes"] == 4 ? ( "Abril" ) : ($tempo["valor"]["mes"] == 5 ? ( "Maio" ) : ($tempo["valor"]["mes"] == 6 ? ( "Junho" ) : ($tempo["valor"]["mes"] == 7 ? ( "Julho" ) : ($tempo["valor"]["mes"] == 8 ? ( "Agosto" ) : ($tempo["valor"]["mes"] == 9 ? ( "Setembro" ) : ($tempo["valor"]["mes"] == 10 ? ( "Outubro" ) : ($tempo["valor"]["mes"] == 11 ? ( "Novembro" ) : ($tempo["valor"]["mes"] == 12 ? ( "Dezembro" ) : "")))))))))))  ?> </td>
+                </tr>
+                <tr> 
+                    <td class="car_bloco_dias_nome"> Domingo </td> 
+                    <td class="car_bloco_dias_nome"> Segunda </td> 
+                    <td class="car_bloco_dias_nome"> Terça </td> 
+                    <td class="car_bloco_dias_nome"> Quarta </td> 
+                    <td class="car_bloco_dias_nome"> Quinta </td> 
+                    <td class="car_bloco_dias_nome"> Sexta </td> 
+                    <td class="car_bloco_dias_nome"> Sabado </td> 
+                </tr>
+                <?php for($con = 0; $con < 6; $con++){ ?>
+                    <tr>
+                        <?php for($cons = $con * 7; $cons < ($con * 7) + 7; $cons++) { ?> 
+                            <td class="car_bloco_numero_nome"> <?php echo $tempo["valor"][$cons]; ?> </td> 
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+    <?php } else {?>
 
-        <div id="rodape" class="row">
-            
-        </div>
-
-    </div>
+    <?php }?>
+<?php } ?>
 </div>

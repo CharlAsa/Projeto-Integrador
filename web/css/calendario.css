@@ -1,0 +1,39 @@
+table.tabela{
+	width: 100%;
+}
+
+td.car_bloco_dias_nome{
+	padding-top: 3%;
+  padding-right: 3%;
+  padding-bottom: 3%;
+	padding-left: 3%;
+	/* color:#00ccff; */
+	text-align: center;
+	border-style: solid;
+}
+
+td.car_bloco_ano_nome{
+	padding-top: 3%;
+	padding-bottom: 3%;
+	text-align: center;
+	/* color:#00ccff; */
+	border-style: solid;
+}
+
+td.car_bloco_mes_nome{
+	padding-top: 3%;
+	padding-bottom: 3%;
+	text-align: center;
+	/* color:#00ccff; */
+	border-style: solid;
+}
+
+td.car_bloco_numero_nome{
+	padding-top: 3%;
+  padding-right: 3%;
+  padding-bottom: 3%;
+	padding-left: 3%;
+	/* color: #ffbb99; */
+	text-align: center;
+	border-style: solid;
+}
