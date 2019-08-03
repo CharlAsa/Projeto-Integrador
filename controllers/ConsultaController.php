@@ -294,12 +294,12 @@ class ConsultaController extends Controller
 					return $this->redirect(['consulta/index']);
 				}
 
-				if($id_Yii == 2){
+				if(Yii::$app->user->identity->id_Yii == 2){
 					$id_paciente = Yii::$app->user->identity->id;
 				}
 
 				$consulta = $this->findModel($id_consulta);
-				if($id_Yii == 2 && $consulta->id_paciente != $id_paciente){
+				if(Yii::$app->user->identity->id_Yii == 2 && $consulta->id_paciente != $id_paciente){
 					return $this->redirect(['consulta/index']);
 				}
 
@@ -332,6 +332,10 @@ class ConsultaController extends Controller
 
 				$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
 
+				if($consulta != null){
+					Yii::$app->session->setFlash('error', "Ainda não existe a ultima consulta.");
+					return $this->redirect(['site/index']);
+				}
 				//yii::trace();
 
 				$nome = $consulta->nomedoarquivo;
@@ -674,14 +678,12 @@ class ConsultaController extends Controller
 			{
                 $model = new LaudoUpload();
 				$model2 = new ConsultaFake();
-
 				
 
                 if ($model2->load(Yii::$app->request->post())) {
-					//$model->load(Yii::$app->request->post());
-					//$model2->load(Yii::$app->request->post());
-					if($model2 != null){
-						$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
+					$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
+
+					if($consulta != null){
 						$model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
 						if ($model->upload($consulta->id)) {
 							//mostra o laudo
@@ -693,31 +695,29 @@ class ConsultaController extends Controller
 						else{
 							Yii::$app->session->setFlash('error', "Upload do laudo falhou.");
 						}
-
-						$linhas = (new \yii\db\Query())
-						->select(['id', 'nome'])
-						->from('usuario')
-						->where(['id_Yii' => 2])
-						->andWhere(['agendamento_consulta' => '0'])
-						//->orwhere(['id_Yii'=>3])
-						//->orwhere(['id_Yii'=>6])
-						//->orwhere(['id_Yii'=>7])
-						->all();
-		
-						$usuario = ArrayHelper::map(
-							$linhas,
-							'id',
-							'nome'
-						);
-
-						Yii::trace($usuario);
-
-
-               			return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
 					}
 					else{
-						$model2 = new ConsultaFake();
+						Yii::$app->session->setFlash('error', "Paciente inválido.");
 					}
+
+					$linhas = (new \yii\db\Query())
+					->select(['id', 'nome'])
+					->from('usuario')
+					->where(['id_Yii' => 2])
+					->andWhere(['agendamento_consulta' => '0'])
+					//->orwhere(['id_Yii'=>3])
+					//->orwhere(['id_Yii'=>6])
+					//->orwhere(['id_Yii'=>7])
+					->all();
+	
+					$usuario = ArrayHelper::map(
+						$linhas,
+						'id',
+						'nome'
+					);
+
+
+					return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
 				}
 
 				$linhas = (new \yii\db\Query())
