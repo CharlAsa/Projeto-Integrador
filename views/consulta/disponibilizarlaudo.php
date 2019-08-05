@@ -2,6 +2,7 @@
 use yii\widgets\ActiveForm;
 use yii\web\UploadedFile;
 use kartik\select2\Select2;
+use yii\helpers\Html;
 
 ?>
 
@@ -37,6 +38,6 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'laudopdf')->fileInput() ?>
 
-    <button>Submit</button>
+    <button>Enviar</button>
 
 <?php ActiveForm::end() ?>
