@@ -332,8 +332,8 @@ class ConsultaController extends Controller
 
 				$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
 
-				if($consulta != null){
-					Yii::$app->session->setFlash('error', "Ainda não existe a ultima consulta.");
+				if($consulta == null){
+					Yii::$app->session->setFlash('warn', "Ainda não existe a ultima consulta.");
 					return $this->redirect(['site/index']);
 				}
 				//yii::trace();

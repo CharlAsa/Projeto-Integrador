@@ -9,6 +9,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\helpers\Json;
+use app\models\Consulta;
 
 use app\models\ConsultaSearch;
 
@@ -68,43 +70,41 @@ class SiteController extends Controller
     public function actionIndex()
     {
         if (!Yii::$app->user->isGuest) {
-            //retorna um array seconds, minutes, hours, mday (dia do mês), wday (dia da semana - 0 = domingo...), mon (mês), year, weekday,
-            //month
-            //$testar_data = getdate(time());
-            //var_dump($testar_data);
-            //die();
             $tempo = null;
+            $mes = Yii::$app->request->post('mes', null);
+            $ano = Yii::$app->request->post('ano', null);
+            $dia = Yii::$app->request->post('dia', null);
+            if($mes != null && $ano != null && $dia != null){
+                $mes = trim($mes);
+                $ano = trim($ano);
+                $dia = trim($dia);
+                $mes = ($mes == "Janeiro") ? ("1") : (($mes == "Fevereiro") ? ("2") : (($mes == "Março") ? ("3") : (($mes == "Abril") ? ("4") : (($mes == "Maio") ? ("5") : (($mes == "Junho") ? ("6") : (($mes == "Julho") ? ("7") : (($mes == "Agosto") ? ("8") : (($mes == "Setembro") ? ("9") : (($mes == "Outubro") ? ("10") : (($mes == "Novembro") ? ("11") : ("12")))))))))));
+                $c = (new \yii\db\Query())
+                    ->select('consulta.*, usuario.nome')
+                    ->from('consulta')
+                    ->innerJoin('usuario', 'consulta.id_paciente = usuario.id')
+					->where(['id_medico' => Yii::$app->user->identity->id])
+                    ->andWhere(['between', 'data_consulta', $ano."-".$mes."-".$dia, $ano."-".$mes."-".$dia])
+                    ->all();
+                    
+                return Json::encode($c);
+            }
+
             if(Yii::$app->user->identity->id_Yii == 4){
-                //definir um array de 42 duas posições com o for
                 for($con = 0; $con < 42; $con++){
                     $tempo["valor"][$con] = null;
-                    Yii::trace($con);
                 }
 
                 $tempo["op"] = 1;
 
-                //ultimo dia do mês em string, formato: 2019-09-30
-                //var_dump(date("t",strtotime("2019-09-02")));
-                //die();
-
-                //retorna o ano mes e dia
-                //var_dump(date("Y-m-t",strtotime("2019-09-02")));
                 $hoje = getdate(time());
-                //for($dia = $hoje['mday'] - 1; $dia > 0; $dia--){
-                    //usar o select para selecionar e retornar o número de consultas
-                    //Yii::trace($dia);
-                //}
 
                 $tempo["valor"]["mes"] = $hoje["mon"];
                 $tempo["valor"]["ano"] = $hoje["year"];
 
-                //var_dump($tempo["valor"]["mes"] == 8 ? "Janeiro"  : ($tempo["valor"]["mes"] == 2 ? "Fervereiro" : ""));
-                //die();
-
                 $ultimodia = date("t", strtotime($hoje["year"]."-".$hoje["mon"]."-".$hoje["mday"]));
                 $primeirodia = date("w", strtotime($hoje["year"]."-".$hoje["mon"]."-"."1")); //0 - domingo...
                 for($dia = 1; $dia <= $ultimodia; $dia++){
-                    //usar o select para selecionar e retornar o número de consultas
                     $c = (new \yii\db\Query())
 					->from('consulta')
 					->where(['id_medico' => Yii::$app->user->identity->id])
@@ -113,8 +113,6 @@ class SiteController extends Controller
                     $tempo["valor"][$primeirodia] = $c;
                     $primeirodia++;
                 }
-                //Yii::trace($tempo["valor"][3]);
-                //Yii::trace("ok");
             }
             return $this->render('index', [ 'tempo'=>$tempo ]);
         }

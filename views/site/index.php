@@ -119,14 +119,15 @@ $this->registerJsFile(
         
         </div>
     </div> -->
+
 <?php if($tempo != null){ ?>
     <?php if($tempo["op"] == 1) { ?>
         <table class="tabela">
                 <tr>
-                    <td colspan="7" class="car_bloco_ano_nome" id="ano"> <?php echo $tempo["valor"]["ano"]; ?> </td>
+                    <td colspan="7" class="car_bloco_ano_nome" id="car_bloco_ano_nome" value="<?php echo $tempo["valor"]["ano"] ?>"> <?php echo $tempo["valor"]["ano"]; ?> </td>
                 </tr>
                 <tr>
-                    <td colspan="7" class="car_bloco_mes_nome" id="mes"> <?php echo ($tempo["valor"]["mes"] == 1) ? ( "Janeiro" ) : ($tempo["valor"]["mes"] == 2 ? ( "Fevereiro" ) : ($tempo["valor"]["mes"] == 3 ? ( "Março" ) : ($tempo["valor"]["mes"] == 4 ? ( "Abril" ) : ($tempo["valor"]["mes"] == 5 ? ( "Maio" ) : ($tempo["valor"]["mes"] == 6 ? ( "Junho" ) : ($tempo["valor"]["mes"] == 7 ? ( "Julho" ) : ($tempo["valor"]["mes"] == 8 ? ( "Agosto" ) : ($tempo["valor"]["mes"] == 9 ? ( "Setembro" ) : ($tempo["valor"]["mes"] == 10 ? ( "Outubro" ) : ($tempo["valor"]["mes"] == 11 ? ( "Novembro" ) : ($tempo["valor"]["mes"] == 12 ? ( "Dezembro" ) : "")))))))))))  ?> </td>
+                    <td colspan="7" class="car_bloco_mes_nome" id="car_bloco_mes_nome" value="<?php echo $tempo["valor"]["mes"] ?>"> <?php echo ($tempo["valor"]["mes"] == 1) ? ( "Janeiro" ) : ($tempo["valor"]["mes"] == 2 ? ( "Fevereiro" ) : ($tempo["valor"]["mes"] == 3 ? ( "Março" ) : ($tempo["valor"]["mes"] == 4 ? ( "Abril" ) : ($tempo["valor"]["mes"] == 5 ? ( "Maio" ) : ($tempo["valor"]["mes"] == 6 ? ( "Junho" ) : ($tempo["valor"]["mes"] == 7 ? ( "Julho" ) : ($tempo["valor"]["mes"] == 8 ? ( "Agosto" ) : ($tempo["valor"]["mes"] == 9 ? ( "Setembro" ) : ($tempo["valor"]["mes"] == 10 ? ( "Outubro" ) : ($tempo["valor"]["mes"] == 11 ? ( "Novembro" ) : ($tempo["valor"]["mes"] == 12 ? ( "Dezembro" ) : "")))))))))))  ?> </td>
                 </tr>
                 <tr> 
                     <td class="car_bloco_dias_nome"> Domingo </td> 
@@ -144,13 +145,14 @@ $this->registerJsFile(
                         <?php } ?>
                     </tr>
                 <?php } ?>
+                <tr> 
+                     <table id="consultas" class="table table-hover" style='width:100%;'> 
+                     
+                     </table>
+                </tr>
     <?php } else {?>
 
     <?php }?>
 <?php } ?>
-
-<div>
-
-</div>
 
 </div>
