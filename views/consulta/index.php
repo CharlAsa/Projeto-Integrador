@@ -18,8 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php  
             if(Yii::$app->user->isGuest == false){ if(Yii::$app->user->identity->id_Yii != 2){
         ?>
-            <?= Html::a(Yii::t('app', 'Agendar consulta'), ['consulta/medicoagendaconsulta'], ['class' => 'btn btn-success']) ?>
-        <?php }}  ?>
+        <?= Html::a(Yii::t('app', 'Agendar consulta'), ['consulta/medicoagendaconsulta'], ['class' => 'btn btn-success']) ?> <?php }}  ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -49,9 +48,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'data_consulta',
             'horario',
-            'estado',
+            [
+                'label' => 'Estado',
+                'format' => 'ntext',
+                'attribute'=>'estado',
+                'value' => function($model) {
+                    return ($model->estado == 'a') ? ("Agendado") : (($model->estado == 'r') ? ("Realizado") : ("Cancelado"));
+                },
+            ],
 
-            ['class' => 'yii\grid\ActionColumn','template'=>'{atualizar} {ver} {deletar} {upload}',
+            ['class' => 'yii\grid\ActionColumn','template'=>Yii::$app->user->identity->id_Yii != 2 ? ('{atualizar} {ver} {deletar} {upload}') : ('{ver}'),
             'buttons'  => [
             'atualizar' => function ($url,$model,$key) {
                 return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['consulta/update', 'id'=>$model->id], ['title'=>Yii::t('app','Atualizar')]);
@@ -60,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['consulta/view', 'id'=>$model->id], ['title'=>Yii::t('app','Ver')]);
             },
             'deletar' => function ($url,$model,$key){
-                return Html::a('<span class="glyphicon glyphicon-remove-sign"></span>', ['consulta/delete', 'id'=>$model->id], ['data-confirm'=>Yii::t('app', 'Tem certeza que deseja remover esse laudo?'), 'title'=>Yii::t('app', 'Remove'), 'data-method'=>'post']);
+                return Html::a('<span class="glyphicon glyphicon-remove-sign"></span>', ['consulta/delete', 'id'=>$model->id], ['data-confirm'=>Yii::t('app', 'Tem certeza que deseja remover esse laudo?'), 'title'=>Yii::t('app', 'Remove'), 'data-method'=>'post'],);
             },
             'upload' => function ($url,$model,$key) {
                 return Html::a('<span class="glyphicon glyphicon-paperclip"></span>', ['consulta/laudoupload', 'id'=>$model->id], ['title'=>Yii::t('app','Upload')]);

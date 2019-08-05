@@ -128,7 +128,7 @@ use kartik\date\DatePicker;
 	<?php Pjax::end() ?>
 	
 	
-	<?= Html::radioList('nomedaclasse', [16, 42],
+	<?php /* Html::radioList('nomedaclasse', [16, 42],
 		['N' => 'Não-Reservado', 'M' => 'Manhã', 'T' => 'Tarde'],
 		['onchange'=>'
 			var radios = document.getElementsByName("nomedaclasse");
@@ -162,7 +162,8 @@ use kartik\date\DatePicker;
 		',
 		'id'=>'radiodafuq']
 		)
-	?>	
+	
+	*/?>	
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

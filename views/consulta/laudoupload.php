@@ -23,6 +23,6 @@ use yii\web\UploadedFile;
 
     <?= $form->field($model, 'laudopdf')->fileInput() ?>
 
-    <button>Submit</button>
+    <button class="btn btn-primary">Enviar</button>
 
 <?php ActiveForm::end() ?>

@@ -20,6 +20,16 @@ class LaudoUpload extends Model
             [['laudopdf'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'laudopdf' => 'PDF do Laudo',
+        ];
+    }
     
     public function upload($id_consulta)
     {
@@ -34,6 +44,8 @@ class LaudoUpload extends Model
             $paciente = Usuario::find()->limit(1)->where(["id" => $laudo->id_paciente])->one();
 			$paciente->updateAttributes(['agendamento_consulta' => '1']);
 
+            $laudo->updateAttributes(['estado' => 'r']);
+            
             if($laudo->nomedoarquivo != null){
                 $nome = $laudo->nomedoarquivo;
                 $url ='../uploads/laudo/' . $nome;
@@ -44,6 +56,7 @@ class LaudoUpload extends Model
                 if($assinatura != null){
                     JuntarAssinaturaLaudo($nome, $assinatura);
                 }
+
 
                 return true;
             }

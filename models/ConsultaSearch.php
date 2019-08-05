@@ -66,8 +66,13 @@ class ConsultaSearch extends Consulta
             'data_consulta' => $this->data_consulta,
         ]);
 
-        $query->andFilterWhere(['like', 'estado', $this->estado])
-        ->andFilterWhere(['like', 'nome', $this->nome])
+        if(strlen($this->estado)<1){
+            $query->andFilterWhere(['like', 'estado', $this->estado]);
+        }
+        else{
+            $query->andFilterWhere(['like', 'estado', $this->estado[0]]);
+        }
+        $query->andFilterWhere(['like', 'nome', $this->nome])
         ->andFilterWhere(['like', 'nome', $this->nomemedico]);
 
         if(!Yii::$app->user->isGuest){
