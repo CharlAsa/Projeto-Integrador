@@ -44,7 +44,7 @@ class LaudoUpload extends Model
             $paciente = Usuario::find()->limit(1)->where(["id" => $laudo->id_paciente])->one();
 			$paciente->updateAttributes(['agendamento_consulta' => '1']);
 
-            $laudo->updateAttributes(['estado' => 'r']);
+            $laudo->updateAttributes(['estado' => 'r', 'dataUpload' => new \yii\db\Expression('NOW()')]);
             
             if($laudo->nomedoarquivo != null){
                 $nome = $laudo->nomedoarquivo;
