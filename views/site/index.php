@@ -26,7 +26,7 @@ $this->registerJsFile(
         <div class="alert alert-warning alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
             <h4><i class="icon fa fa-check"></i>Erro!</h4>
-            <?= Yii::$app->session->getFlash('error') ?>
+            <?= Yii::$app->session->getFlash('warn') ?>
         </div>
     <?php endif; ?>
 
