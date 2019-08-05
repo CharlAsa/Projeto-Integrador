@@ -43,16 +43,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_Yii')
         ->dropDownList(
-            ['1' => 'Secretario', '2' => 'Paciente', '4' => 'Doutor'],           // Flat array ('id'=>'label') or $items
+            ['1' => 'Administrador', '2' => 'Paciente', '3' => 'Secretario', '4' => 'Doutor'],           // Flat array ('id'=>'label') or $items
             //['prompt'=>'']    // options
             ['onchange'=>'
                 if($(this).val() == 4){
-                    document.getElementsByClassName("field-medico-crm required")[0].style.visibility = "visible";
-                    document.getElementById("medico-crm").value = "";
+                    document.getElementsByClassName("field-usuario-crm")[0].style.visibility = "visible";
+                    document.getElementById("usuario-crm").value = "";
                 }
                 else{
-                    document.getElementsByClassName("field-medico-crm required")[0].style.visibility = "hidden";
-                    document.getElementById("medico-crm").value = "0";
+                    document.getElementsByClassName("field-usuario-crm")[0].style.visibility = "hidden";
+                    document.getElementById("usuario-crm").value = "0";
                 }
             ']
         );

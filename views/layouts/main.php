@@ -37,7 +37,9 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
 
-                
+                <!-- <div class="navbar nav_title" style="border: 0;">
+                    <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Edite me!</span></a>
+                </div> -->
                 <div class="clearfix"></div>
 
                 <!-- menu prile quick info -->
@@ -97,16 +99,31 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                     ],
                                                 ]
                                             ) : (
-                                                [
-                                                    "label" => "Secretário",
-                                                    "icon" => "user",
-                                                    "url" => "#",
-                                                    "items" => [
-                                                        ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
-                                                        ["label" => "Ver consultas", "url" => ["consulta/index"]],
-                                                        ["label" => "Cadastrar usuário", "url" => ["usuario/create"]],
-                                                    ],
-                                                ]
+                                                Yii::$app->user->identity->id_Yii == 1 ? (
+                                                    [
+                                                        "label" => "Administrador",
+                                                        "icon" => "user",
+                                                        "url" => "#",
+                                                        "items" => [
+                                                            ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
+                                                            ["label" => "Ver consultas", "url" => ["consulta/index"]],
+                                                            ["label" => "Cadastrar usuário", "url" => ["usuario/create"]],
+                                                        ],
+                                                    ]
+                                                )
+                                                :
+                                                (
+                                                    [
+                                                        "label" => "Secretario",
+                                                        "icon" => "user",
+                                                        "url" => "#",
+                                                        "items" => [
+                                                            ["label" => "Agendar consulta", "url" => ["consulta/secretarioagendaconsulta"]],
+                                                            ["label" => "Ver consultas", "url" => ["consulta/index"]],
+                                                            ["label" => "Cadastrar usuário", "url" => ["usuario/create"]],
+                                                        ],
+                                                    ]
+                                                )
                                             )
                                         )
                                     ) : (
