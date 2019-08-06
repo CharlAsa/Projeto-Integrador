@@ -673,15 +673,15 @@ class ConsultaController extends Controller
     public function actionDisponibilizarlaudo()
     {
         if(!Yii::$app->user->isGuest){
-            $id_Yii = Yii::$app->user->identity->id_Yii;
-            if($id_Yii == 4)
+            if(Yii::$app->user->identity->id_Yii == 4)
 			{
                 $model = new LaudoUpload();
 				$model2 = new ConsultaFake();
 				
 
                 if ($model2->load(Yii::$app->request->post())) {
-					$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->one();
+					//$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->andWhere(["id_medico" => Yii::$app->user->identity->id])->one();
+					$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["id_medico" => Yii::$app->user->identity->id])->one();
 
 					if($consulta != null){
 						$model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
