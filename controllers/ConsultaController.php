@@ -400,10 +400,6 @@ class ConsultaController extends Controller
 				$v["valor"] = null;
 				$v["op"] = -1;
 
-				$u = "o";
-
-				Yii::trace(Yii::$app->request->post('param1'));
-
 				//$model->horario = $u;
 
 				if($param1 != null){ 
@@ -437,7 +433,7 @@ class ConsultaController extends Controller
 						->select('horario')
 						->from('consulta')
 						->where(['id_medico' => Yii::$app->user->identity->id])
-						->andWhere(['estado'=>'a'])
+						//->andWhere(['estado'=>'a'])
 						->andWhere(['between', 'data_consulta', $param1, $param1])
 						->All();
 						foreach($temp as $r){
@@ -493,32 +489,35 @@ class ConsultaController extends Controller
 			{
 				$model = new Consulta();
 
-				if ($model->load(Yii::$app->request->post())) {
-					//$model->id_medico = Yii::$app->user->identity->id;
-					$model->estado = 'a';
+				$param1 = Yii::$app->request->post('param1', null);
+
+				if($param1 == null){
+					if ($model->load(Yii::$app->request->post())) {
+						//$model->id_medico = Yii::$app->user->identity->id;
+						$model->estado = 'a';
 
 
-					//checa se existe outra consulta do paciente no mesmo horário
-					$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
+						//checa se existe outra consulta do paciente no mesmo horário
+						$aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
 
-					$c = (new \yii\db\Query())
-					->from('consulta')
-					->where(['id_medico' => $model->id_medico])
-					->andWhere(['id_paciente'=>$model->id_paciente])
-					->andWhere(['between', 'data_consulta', $aux, $aux])
-					->andWhere(['horario'=>$model->horario])
-					->count();
-					if($c == 0){
-						if($model->save()){
-							return $this->redirect(['view', 'id' => $model->id]);
+						$c = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['id_paciente'=>$model->id_paciente])
+						->andWhere(['between', 'data_consulta', $aux, $aux])
+						->andWhere(['horario'=>$model->horario])
+						->count();
+						if($c == 0){
+							if($model->save()){
+								return $this->redirect(['view', 'id' => $model->id]);
+							}
 						}
-					}
-					else{
-						return $this->redirect(['index']);
+						else{
+							return $this->redirect(['index']);
+						}
 					}
 				}
 
-				$param1 = Yii::$app->request->post('param1', null);
 				$param2 = Yii::$app->request->post('param2', null);
 
 				$v["valor"] = null;
@@ -531,7 +530,7 @@ class ConsultaController extends Controller
 				//$model->horario = $u;
 
 				if($param1 != null){ 
-					if(strlen($param1) == 10){
+					if(strlen($param1) == 10  && $param2 == 2){
 						$param1 = str_replace('/', '-', $param1);
 						$param1 = date("Y-m-d", strtotime($param1));					
 						$v["valor"] = (new \yii\db\Query())
@@ -551,6 +550,25 @@ class ConsultaController extends Controller
 						->count();
 						$v["op"] = 1;
 						$model->horario = $param1;
+					}
+					else if(strlen($param1) == 10 && $param2 == 3){
+						$param1 = str_replace('/', '-', $param1);
+						$param1 = date("Y-m-d", strtotime($param1));	
+						$v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
+						$v["op"] = 2;
+						$temp = (new \yii\db\Query())
+						->select('horario')
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						//->andWhere(['estado'=>'a'])
+						->andWhere(['between', 'data_consulta', $param1, $param1])
+						->All();
+						foreach($temp as $r){
+							if(in_array($r["horario"], $v["valor"])){
+								unset($v["valor"][$r["horario"]]);
+							}
+						}
+						$model->horario = null;
 					}
 				}
 
@@ -678,6 +696,16 @@ class ConsultaController extends Controller
                 $model = new LaudoUpload();
 				$model2 = new ConsultaFake();
 				
+				$linhasz = Consulta::find()
+				->where(['id_medico'=>Yii::$app->user->identity->id])
+				->AndWhere(['estado'=>'a'])
+				->all();
+				
+				$usuario = null;
+
+				foreach($linhasz as $cada){
+					$usuario[$cada->paciente->id] = $cada->paciente->nome;
+				}
 
                 if ($model2->load(Yii::$app->request->post())) {
 					$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["id_medico" => Yii::$app->user->identity->id])->one();
@@ -694,25 +722,6 @@ class ConsultaController extends Controller
 					else{
 						Yii::$app->session->setFlash('error', "Paciente inválido.");
 					}
-
-					$usuario = null;
-
-					foreach($linhasz as $cada){
-						$usuario[$cada->paciente->id] = $cada->paciente->nome;
-					}
-
-					return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
-				}
-
-				$linhasz = Consulta::find()
-				->where(['id_medico'=>Yii::$app->user->identity->id])
-				->AndWhere(['estado'=>'a'])
-				->all();
-
-				$usuario = null;
-
-				foreach($linhasz as $cada){
-					$usuario[$cada->paciente->id] = $cada->paciente->nome;
 				}
 				
                 return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);

@@ -50,17 +50,21 @@ use kartik\date\DatePicker;
 			'options' => [
 				'placeholder' => 'Escolha a data da consulta...',
 				'onchange'=>'
-					var k = document.getElementById("aff");
+					var k = document.getElementById("affs");
 					k.dataset.params =
 					"{"
 					+"\"param1\":"
 					+"\""
 					+$(this).val()
 					+"\""
-					+",\"param2\":2"
-					+"}";
-					
-					document.getElementById("aff").click();
+					+",\"param2\":3"
+					+",\"param3\":"
+					+"\""
+					+$(this).val()
+					+"\""
+					+"}";	
+
+					document.getElementById("affs").click();
 				'
 				],
 			'pluginOptions' => [
@@ -71,45 +75,31 @@ use kartik\date\DatePicker;
 		
 	?>
 	
-	<?= $form->field($model, 'horario')->widget(\yii\widgets\MaskedInput::className(), [
-    //'mask' => 'hh:mm'])
-	'mask' => 'h:m',
-		'definitions'=>[
-			'h'=>[
-				'cardinality'=>2,
-				'prevalidator' => [
-					['validator'=>'^([0-2])$', 'cardinality'=>1],
-					['validator'=>'^([0-9]|0[0-9]|1[0-9]|2[0-3])$', 'cardinality'=>2],
-				],
-				'validator'=>'^([0-9]|0[0-9]|1[0-9]|2[0-3])$'
-			],
-			'm'=>[
-				'cardinality'=>2,
-				'prevalidator' => [
-					['validator'=>'^(0|[0-5])$', 'cardinality'=>1],
-					['validator'=>'^([0-5]?\d)$', 'cardinality'=>2],
-				]
-			]
-		],
-		'options' => [
-			'onchange'=>'
-				var k = document.getElementById("aff");
-				k.dataset.params =
-				"{"
-				+"\"param1\":"
-				+"\""
-				+$(this).val().replace(":",".")
-				+"\""
-				+",\"param2\":2"
-				+"}";
-				
-				document.getElementById("aff").click();
-			'
-		]
-		])
-	->label('Horario da consulta') ?>
+	<?php Pjax::begin(['timeout'=>false, 'id'=>'a']) ?>
+
+	<?php if($v["op"] == 2){ ?>
+	<?= $form->field($model, 'horario')
+        ->dropDownList(
+			$v["valor"]
+            //['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
+            //['prompt'=>'']    // options
+    ); ?>
+	<?php } ?>
+
+	<?= Html::a('', 
+	['consulta/secretarioagendaconsulta'], [
+	'data-method' => 'POST',
+	'data-params' => [
+		'param1' => 1,
+		'param2' => 1,
+	],
+	'data-pjax' => 1,
+	'id'=>'affs',
+	]) ?>
+
+	<?php Pjax::end() ?>
 	
-	<?= Html::radioList('nomedaclasse', [16, 42],
+	<?php /* Html::radioList('nomedaclasse', [16, 42],
 		['N' => 'Não-Reservado', 'M' => 'Manhã', 'T' => 'Tarde'],
 		['onchange'=>'
 			var radios = document.getElementsByName("nomedaclasse");
@@ -141,9 +131,9 @@ use kartik\date\DatePicker;
 				}
 			}
 		',
-		'id'=>'radiodafuq']
+		'id'=>'radiodafuq'],
 		)
-	?>	
+	*/?>	
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
