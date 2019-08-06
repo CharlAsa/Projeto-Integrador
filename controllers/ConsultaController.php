@@ -680,16 +680,11 @@ class ConsultaController extends Controller
 				
 
                 if ($model2->load(Yii::$app->request->post())) {
-					//$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["IS NOT", "nomedoarquivo", NULL])->andWhere(["id_medico" => Yii::$app->user->identity->id])->one();
 					$consulta = Consulta::find()->limit(1)->orderBy(['id'=>SORT_DESC])->where(["id_paciente" => $model2->id_paciente])->andWhere(["id_medico" => Yii::$app->user->identity->id])->one();
 
 					if($consulta != null){
 						$model->laudopdf = UploadedFile::getInstance($model, 'laudopdf');
 						if ($model->upload($consulta->id)) {
-							//mostra o laudo
-							//$paciente = Usuario::find()->where(["id" => $model2->id_paciente])->one();
-							//$paciente->updateAttributes(['agendamento_consulta' => '1']);
-
 							Yii::$app->session->setFlash('success', "Upload do laudo foi um sucesso.");
 						}
 						else{
@@ -700,42 +695,26 @@ class ConsultaController extends Controller
 						Yii::$app->session->setFlash('error', "Paciente inválido.");
 					}
 
-					$linhas = (new \yii\db\Query())
-					->select(['id', 'nome'])
-					->from('usuario')
-					->where(['id_Yii' => 2])
-					->andWhere(['agendamento_consulta' => '0'])
-					//->orwhere(['id_Yii'=>3])
-					//->orwhere(['id_Yii'=>6])
-					//->orwhere(['id_Yii'=>7])
-					->all();
-	
-					$usuario = ArrayHelper::map(
-						$linhas,
-						'id',
-						'nome'
-					);
+					$usuario = null;
 
+					foreach($linhasz as $cada){
+						$usuario[$cada->paciente->id] = $cada->paciente->nome;
+					}
 
 					return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
 				}
 
-				$linhas = (new \yii\db\Query())
-				->select(['id', 'nome'])
-				->from('usuario')
-				->where(['id_Yii' => 2])
-				->andWhere(['agendamento_consulta' => '0'])
-				//->orwhere(['id_Yii'=>3])
-				//->orwhere(['id_Yii'=>6])
-				//->orwhere(['id_Yii'=>7])
+				$linhasz = Consulta::find()
+				->where(['id_medico'=>Yii::$app->user->identity->id])
+				->AndWhere(['estado'=>'a'])
 				->all();
 
-				$usuario = ArrayHelper::map(
-					$linhas,
-					'id',
-					'nome'
-				);
+				$usuario = null;
 
+				foreach($linhasz as $cada){
+					$usuario[$cada->paciente->id] = $cada->paciente->nome;
+				}
+				
                 return $this->render('disponibilizarlaudo', ['model' => $model, 'usuario' => $usuario, 'model2'=>$model2]);
             }
 			else{
