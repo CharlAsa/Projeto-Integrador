@@ -1,4 +1,4 @@
-<?php
+"<?php
 
 namespace app\controllers;
 
@@ -261,6 +261,7 @@ class UsuarioController extends Controller
                     $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
                     
                     $transaction = Yii::$app->db->beginTransaction();
+                    $model->agendamento_consulta = '1';
 					if($model->save()){
 						$model2->id_usuario = $model->id;
                         if($model2->save()){     
