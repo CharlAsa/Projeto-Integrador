@@ -509,6 +509,10 @@ class ConsultaController extends Controller
 						->count();
 						if($c == 0){
 							if($model->save()){
+								$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
+
+								$paciente->updateAttributes(['agendamento_consulta' => '0']);
+
 								return $this->redirect(['view', 'id' => $model->id]);
 							}
 						}
@@ -576,6 +580,7 @@ class ConsultaController extends Controller
 				->select(['id', 'nome'])
 				->from('usuario')
 				->where(['id_Yii' => 2])
+				->andWhere(['agendamento_consulta' => '1'])
 				//->orwhere(['id_Yii'=>3])
 				//->orwhere(['id_Yii'=>6])
 				//->orwhere(['id_Yii'=>7])
