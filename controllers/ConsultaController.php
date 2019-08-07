@@ -509,6 +509,8 @@ class ConsultaController extends Controller
 						->count();
 						if($c == 0){
 							if($model->save()){
+								$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
+								$paciente->updateAttributes(['agendamento_consulta' => '0']);
 								return $this->redirect(['view', 'id' => $model->id]);
 							}
 						}
@@ -552,6 +554,7 @@ class ConsultaController extends Controller
 						$model->horario = $param1;
 					}
 					else if(strlen($param1) == 10 && $param2 == 3){
+						$model->load(Yii::$app->request->post());
 						$param1 = str_replace('/', '-', $param1);
 						$param1 = date("Y-m-d", strtotime($param1));	
 						$v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
@@ -579,6 +582,7 @@ class ConsultaController extends Controller
 				//->orwhere(['id_Yii'=>3])
 				//->orwhere(['id_Yii'=>6])
 				//->orwhere(['id_Yii'=>7])
+				->andWhere(['agendamento_consulta' => '1'])
 				->all();
 				
 				$linhasM = (new \yii\db\Query())
