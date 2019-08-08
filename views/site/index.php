@@ -4,8 +4,10 @@
 
 use yii\helpers\Url;
 use yii\helpers\html;
-
-use marekpetras\calendarview\CalendarView;
+use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use kartik\date\DatePicker;
+use yii\widgets\Pjax;
 
 $this->title = 'My Yii Application';
 
@@ -119,6 +121,102 @@ $this->registerJsFile(
         
         </div>
     </div> -->
+<div class="body-content">
+<?php if(Yii::$app->user->identity->id_Yii == 2){ ?>
+    <?php $form = ActiveForm::begin(); ?>
+    <h3> Agende sua consulta </h3>
+    <?= 
+        $form->field($model, 'id_medico')->widget(Select2::classname(), [
+            'data' => $medicoLista,
+            'language' => 'pt',
+            'options' => ['placeholder' => 'Selecione o médico...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ])
+        ->label('Nome do Médico')
+    ?>
+
+    <?=   
+        $form->field($model, 'data_consulta')->widget(DatePicker::className(), [
+        
+            //'model' => $model, 
+            //'attribute' => 'data_consulta',
+            //'type' => DatePicker::TYPE_INPUT,
+            
+            'language' => 'pt',
+            'options' => [
+                'placeholder' => 'Escolha a data da consulta...',
+                /*'onchange'=>'
+                    var k = document.getElementById("aff");
+                    k.dataset.params =
+                    "{"
+                    +"\"param1\":"
+                    +"\""
+                    +$(this).val()
+                    +"\""
+                    +",\"param2\":2"
+                    +"}";
+                    
+                    document.getElementById("aff").click();
+                '*/
+                'onchange'=>'
+                    var k = document.getElementById("affs");
+                    k.dataset.params =
+                    "{"
+                    +"\"param1\":"
+                    +"\""
+                    +$(this).val()
+                    +"\""
+                    +",\"param2\":3"
+                    +",\"param3\":"
+                    +"\""
+                    +$(this).val()
+                    +"\""
+                    +"}";   
+
+                    document.getElementById("affs").click();
+                '
+                ],
+            'pluginOptions' => [
+                'autoclose'=>true
+            ],
+        
+        ])
+    ?>
+
+    <?php Pjax::begin(['timeout'=>false, 'id'=>'a']) ?>
+
+        <?php if($v["op"] == 2){ ?>
+        <?= $form->field($model, 'horario')
+            ->dropDownList(
+                $v["valor"]
+                //['M' => 'Masculino', 'F' => 'Feminino', 'O' => 'Outro'],           // Flat array ('id'=>'label') or $items
+                //['prompt'=>'']    // options
+        ); ?>
+        <?php } ?>
+
+        <?= Html::a('', 
+        ['site/index'], [
+        'data-method' => 'POST',
+        'data-params' => [
+            'param1' => 1,
+            'param2' => 1,
+        ],
+        'data-pjax' => 1,
+        'id'=>'affs',
+        ]) ?>
+
+	<?php Pjax::end() ?>
+
+    <div class="form-group">
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+	</div>		
+
+    <?php ActiveForm::end(); ?>
+
+<?php } ?>
+
 
 <?php if($tempo != null){ ?>
     <?php if($tempo["op"] == 1) { ?>
@@ -155,4 +253,5 @@ $this->registerJsFile(
     <?php }?>
 <?php } ?>
 
+</div>
 </div>

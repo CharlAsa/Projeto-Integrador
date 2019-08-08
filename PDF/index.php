@@ -1,5 +1,7 @@
 <?php
 use setasign\Fpdi;
+//use setasign\Fpdi\Fpdi;
+//use setasign\Fpdi\PdfReader;
 
 require_once('TCPDF-master/tcpdf.php');
 //require_once('fpdf181/fpdf.php');
@@ -17,23 +19,12 @@ class Pdf extends Fpdi\TcpdfFpdi
      */
     function Header()
     {
-        /*
-        if (is_null($this->tplId)) {
-            $this->setSourceFile('logo.pdf');
-            $this->tplId = $this->importPage(1);
-        }
-        $size = $this->useImportedPage($this->tplId, 130, 5, 60);
 
-        $this->SetFont('freesans', 'B', 20);
-        $this->SetTextColor(0);
-        $this->SetXY(PDF_MARGIN_LEFT, 5);
-        $this->Cell(0, $size['height'], 'TCPDF and FPDI');
-        */
     }
 
     function Footer()
     {
-        // emtpy method body
+
     }
 }
 
@@ -47,10 +38,10 @@ function JuntarAssinaturaLaudo($nomelaudo = null, $nomeassinatura = null){
     $page = $pdf->ImportPage(1);
     $pdf->useTemplate($page, 0, 0);
     $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Charles');
+    $pdf->SetAuthor('Automatico');
     $pdf->SetTitle('Laudo');
     $html = '<img src="'.'../uploads/fotos/'.$nomeassinatura.'">';
-    $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+    $pdf->writeHTMLCell(0, 0, '77', '230', $html, 0, 1, 0, true, '', true);
     $pdf->Output(dirname(__DIR__).'/uploads/laudo/'.$nomelaudo, 'F');
     return;
 }

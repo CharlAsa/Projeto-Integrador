@@ -128,8 +128,7 @@ class ConsultaController extends Controller
     public function actionUpdate($id = null)
     {
 		if(!Yii::$app->user->isGuest){
-			$id_Yii = Yii::$app->user->identity->id_Yii;
-			if($id_Yii != 2)
+			if(Yii::$app->user->identity->id_Yii == 1 || Yii::$app->user->identity->id_Yii == 4)
 			{
 				if($id == null){
 					return $this->redirect(['index']);
@@ -204,7 +203,7 @@ class ConsultaController extends Controller
 				);
 
 				$medico = null;
-				if($id_Yii == 1){
+				if(Yii::$app->user->identity->id_Yii == 1){
 					$linhasM = (new \yii\db\Query())
 					->select(['id', 'nome'])
 					->from('usuario')
@@ -249,7 +248,7 @@ class ConsultaController extends Controller
     public function actionDelete($id = null)
     {
 		if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii != 2)
+			if(Yii::$app->user->identity->id_Yii == 1 || Yii::$app->user->identity->id_Yii == 4)
 			{
 				if($id == null){
 					return $this->redirect(['index']);
@@ -485,7 +484,7 @@ class ConsultaController extends Controller
     public function actionSecretarioagendaconsulta()
 	{  
 		if(!Yii::$app->user->isGuest){
-			if(Yii::$app->user->identity->id_Yii == 1)
+			if(Yii::$app->user->identity->id_Yii == 1 || Yii::$app->user->identity->id_Yii == 3)
 			{
 				$model = new Consulta();
 

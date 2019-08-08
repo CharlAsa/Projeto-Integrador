@@ -11,7 +11,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\helpers\Json;
 use app\models\Consulta;
-
+use yii\helpers\ArrayHelper;
 use app\models\ConsultaSearch;
 
 class SiteController extends Controller
@@ -114,7 +114,111 @@ class SiteController extends Controller
                     $primeirodia++;
                 }
             }
-            return $this->render('index', [ 'tempo'=>$tempo ]);
+
+            $model = null;
+            $medicos = null;
+            $medicoLista = null;
+            $v["valor"] = null;
+            $v["op"] = -1;
+
+            if(Yii::$app->user->identity->id_Yii == 2){
+                $model = new Consulta();
+
+                $param1 = Yii::$app->request->post('param1', null);
+
+                if($param1 == null){
+                    if($model->load(Yii::$app->request->post())){
+                        $model->id_paciente = Yii::$app->user->identity->id;
+                        
+                        $model->estado = 'a';
+
+
+                        //checa se existe outra consulta do paciente no mesmo horário
+                        $aux = date("Y-m-d", strtotime(str_replace('/', '-', $model->data_consulta)));
+
+                        $c = (new \yii\db\Query())
+                        ->from('consulta')
+                        ->where(['id_medico' => $model->id_medico])
+                        ->andWhere(['id_paciente'=>$model->id_paciente])
+                        ->andWhere(['between', 'data_consulta', $aux, $aux])
+                        ->andWhere(['horario'=>$model->horario])
+                        ->count();
+                        if($c == 0){
+                            if($model->save()){
+                                $paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
+                                $paciente->updateAttributes(['agendamento_consulta' => '0']);
+                                return $this->redirect(['view', 'id' => $model->id]);
+                            }
+                        }
+                        else{
+                            return $this->redirect(['index']);
+                        }
+                    }
+                }
+
+                $param2 = Yii::$app->request->post('param2', null);
+                
+                if($param1 != null){ 
+					if(strlen($param1) == 10  && $param2 == 2){
+						$param1 = str_replace('/', '-', $param1);
+						$param1 = date("Y-m-d", strtotime($param1));					
+						$v["valor"] = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['between', 'data_consulta', $param1, $param1])
+						//->andWhere(['data_consulta'=>$param1])
+						->count();
+						$v["op"] = 0;
+					}
+					else if(strlen($param1) == 5){
+						$param1 = str_replace('.', ':', $param1);
+						$v["valor"] = (new \yii\db\Query())
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						->andWhere(['horario'=>$param1])
+						->count();
+						$v["op"] = 1;
+						$model->horario = $param1;
+					}
+					else if(strlen($param1) == 10 && $param2 == 3){
+						$model->load(Yii::$app->request->post());
+						$param1 = str_replace('/', '-', $param1);
+						$param1 = date("Y-m-d", strtotime($param1));	
+						$v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
+						$v["op"] = 2;
+						$temp = (new \yii\db\Query())
+						->select('horario')
+						->from('consulta')
+						->where(['id_medico' => $model->id_medico])
+						//->andWhere(['estado'=>'a'])
+						->andWhere(['between', 'data_consulta', $param1, $param1])
+						->All();
+						foreach($temp as $r){
+							if(in_array($r["horario"], $v["valor"])){
+								unset($v["valor"][$r["horario"]]);
+							}
+						}
+						$model->horario = null;
+					}
+				}
+
+                $medicos = (new \yii\db\Query())
+                            ->select(['id', 'nome'])
+                            ->from('usuario')
+                            ->where(['id_Yii' => 4])
+                            ->all();
+
+                $medicoLista = ArrayHelper::map(
+                    $medicos,
+                    'id',
+                    'nome'
+                );
+                
+
+
+            }
+
+            return $this->render('index', [ 'tempo'=>$tempo, 'model'=>$model, 'medicos'=>$medicos, 'medicoLista'=>$medicoLista, 'v'=>$v ]);
         }
 
         return $this->redirect(['site/login']);
