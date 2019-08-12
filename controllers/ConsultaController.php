@@ -16,6 +16,8 @@ use yii\data\ActiveDataProvider;
 
 use app\models\LaudoUpload;
 use yii\web\UploadedFile;
+
+use app\models\Laudo;
 /**
  * ConsultaController implements the CRUD actions for Consulta model.
  */
@@ -264,7 +266,12 @@ class ConsultaController extends Controller
 
 				$usuario->updateAttributes(['agendamento_consulta' => '1']);
 
+				$laudo = Laudo::find()->limit(1)->where(["id_consulta" => $id])->one();
+				if($laudo != null){
+					$laudo->delete();
+				}
 				$this->findModel($id)->delete();
+
 
 				return $this->redirect(['index']);
 			}
@@ -383,7 +390,7 @@ class ConsultaController extends Controller
 							if($model->save()){
 								$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
 
-								$paciente->updateAttributes(['agendamento_consulta' => '0']);
+								$paciente->updateAttributes(['agendamento_consulta' => '0', 'cadastro_laudo' => 'n']);
 								
 								return $this->redirect(['view', 'id' => $model->id]);
 							}
@@ -509,7 +516,8 @@ class ConsultaController extends Controller
 						if($c == 0){
 							if($model->save()){
 								$paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
-								$paciente->updateAttributes(['agendamento_consulta' => '0']);
+								$paciente->updateAttributes(['agendamento_consulta' => '0', 'cadastro_laudo' => 'n']);
+								//$paciente->updateAttributes(['cadastro.laudo' => 'n']);
 								return $this->redirect(['view', 'id' => $model->id]);
 							}
 						}
@@ -736,7 +744,46 @@ class ConsultaController extends Controller
         else{
 			return $this->redirect(['site/login']);
 		}
-    }
+	}
+
+	/**
+     * Paciente calcela sua consulta, caso ache no banco e tenha o estado 'a'
+     * @throws NotFoundHttpException Caso não seja paciente
+     */
+	public function actionCancelarultimaconsulta(){
+		if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 2)
+			{
+				$consulta = Consulta::find()
+				->orderBy(['id'=>SORT_DESC])
+				->limit(1)
+				->where(['id_paciente'=>Yii::$app->user->identity->id])
+				->One();
+
+				if($consulta->estado == 'a'){
+					$consulta->updateAttributes(['estado' => 'c']);
+					$usuario = Usuario::find()
+					->limit(1)
+					->where(['id'=>Yii::$app->user->identity->id])
+					->One();
+					$usuario->updateAttributes(['agendamento_consulta' => '0']);
+
+					//Yii::$app->session->setFlash('sucesso', "Última consulta cancelada com sucesso.");
+				}
+				else{
+
+				}
+				return $this->goBack();
+
+			}
+			else{
+				throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+			}
+        }
+        else{
+			return $this->redirect(['site/login']);
+		}
+	}
 
     /**
      * Finds the Consulta model based on its primary key value.

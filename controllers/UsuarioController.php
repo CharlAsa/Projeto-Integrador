@@ -263,7 +263,7 @@ class UsuarioController extends Controller
                     
                     $transaction = Yii::$app->db->beginTransaction();
                     $model->agendamento_consulta = '1';
-                    $model->cadastro_laudo = 'n';
+                    //$model->cadastro_laudo = 'n';
                     
 					if($model->save()){
 						$model2->id_usuario = $model->id;
