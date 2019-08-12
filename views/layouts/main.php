@@ -81,6 +81,7 @@ $bundle = yiister\gentelella\assets\Asset::register($this);
                                                 "icon" => "user",
                                                 "url" => "#",
                                                 "items" => [
+                                                    ["label" => "Cadastrar Laudo", "url" => ["laudo/create"]],
                                                     ["label" => "Agendar consulta", "url" => ["consulta/medicoagendaconsulta"]],
                                                     ["label" => "Ver todas as consultas", "url" => ["consulta/index"]],
                                                     ["label" => "Disponibilizar Laudo", "url" => ["consulta/disponibilizarlaudo"]],

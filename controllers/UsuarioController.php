@@ -111,6 +111,7 @@ class UsuarioController extends Controller
                 if ($model->load(Yii::$app->request->post()) && $arrayContato->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())) {
 
                     $model->agendamento_consulta = '1';
+                    $model->cadastro_laudo = 'n';
 
                     if($model->save())
                     {
@@ -262,6 +263,8 @@ class UsuarioController extends Controller
                     
                     $transaction = Yii::$app->db->beginTransaction();
                     $model->agendamento_consulta = '1';
+                    $model->cadastro_laudo = 'n';
+                    
 					if($model->save()){
 						$model2->id_usuario = $model->id;
                         if($model2->save()){     
