@@ -32,6 +32,17 @@ $this->registerJsFile(
         </div>
     <?php endif; ?>
 
+    <?php if(Yii::$app->user->identity->id_Yii == 1){
+    //$usuario = Usuario::find()->all();
+
+        $searchModel = new UsuarioSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    
+        echo $this->render('listagem', array('searchModel' => $searchModel,'dataProvider' => $dataProvider,));
+    ?>
+
+    <?php }?>
+
     <!-- <div class="jumbotron">
         <h1>Congratulations!</h1>
 

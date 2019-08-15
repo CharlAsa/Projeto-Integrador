@@ -146,7 +146,7 @@ class SiteController extends Controller
                         if($c == 0){
                             if($model->save()){
                                 $paciente = Usuario::find()->where(["id" => $model->id_paciente])->one();
-                                $paciente->updateAttributes(['agendamento_consulta' => '0']);
+								$paciente->updateAttributes(['agendamento_consulta' => '0', 'cadastro_laudo' => 'n']);
                                 return $this->redirect(['view', 'id' => $model->id]);
                             }
                         }
@@ -184,7 +184,15 @@ class SiteController extends Controller
 						$model->load(Yii::$app->request->post());
 						$param1 = str_replace('/', '-', $param1);
 						$param1 = date("Y-m-d", strtotime($param1));	
-						$v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
+                        $v["valor"] = array('07:00'=>'07:00', '08:00'=>'08:00');
+                        //$v["valor"]['07:00'] = '07:00';
+                        //$data = date('H:i', mktime(7, 0, 0, 0, 0, 0) + mktime(-1,15,0,0,0,0));
+
+                        /*
+                        for($aux = date('H:i', mktime(7, 0, 0, 0, 0, 0)); $aux->add(new DateInterval('PT15M')); $aux < new DateTime('12:00')){
+                            $v["valor"][$aux] = $aux;
+                        }
+                        */
 						$v["op"] = 2;
 						$temp = (new \yii\db\Query())
 						->select('horario')
@@ -285,5 +293,145 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionListagem()
+    {
+        if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 1)
+            {
+                $searchModel = new UsuarioSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+                return $this->render('listagem', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
+        else{
+            return $this->redirect(['site/login']);
+        }
+    }
+
+    public function actionView($id)
+    {
+        if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 1)
+            {
+                return $this->render('view', [
+                    'model' => $this->findModel($id),
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
+        else{
+            return $this->redirect(['site/login']);
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 1)
+            {
+                $model = Usuario::findOne($id);
+                //$idContato = (new \yii\db\Query())->select(['id_usuario'])->from('contato')->where(['id_usuario' => $id]);
+                //$idEndereco = (new \yii\db\Query())->select(['id_usuario'])->from('endereco')->where(['id_usuario' => $id]);
+                //$model2 = (new \yii\db\Query())->select(['*'])->from('medico')->where(['id_usuario' => $id]);
+                //$model2 = new Medico();
+                //$aux = Medico::findOne($id);
+                //if($aux != null){
+                //    $model2 = $aux;
+                //}
+                $arrayContato = Contato::findOne($id);
+                $arrayEndereco = Endereco::findOne($id);
+                //$arrayContato = $this->findModelContato($idContato);
+                //$arrayEndereco = $this->findModelEndereco($idEndereco);
+
+                $model->nascimento = date('d-m-Y' , strtotime($model->nascimento));
+
+                if($model->load(Yii::$app->request->post()) && $arrayEndereco->load(Yii::$app->request->post())
+                && $arrayContato->load(Yii::$app->request->post())) 
+                {
+                    $model->nascimento = date('Y-m-d' , strtotime($model->nascimento));
+                    if($model->save())
+                    {
+                        $arrayContato->id_usuario = $model->id; 
+                        $arrayEndereco->id_usuario = $model->id;
+                        if($arrayContato->save() && $arrayEndereco->save())
+                        {
+                            //if($model2 != null){
+                                //$model2->id_usuario = $model->id;
+                                //$model2->save();
+                            //}
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    }
+                }
+
+
+                return $this->render('update', [
+                    'model' => $model,
+                    'arrayContato' => $arrayContato,
+                    'arrayEndereco' => $arrayEndereco,
+                    //'model2'=>$model2,
+                ]);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
+        else{
+            return $this->redirect(['site/login']);
+        }
+    }
+
+    /**
+     * Deletes an existing Usuario model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        if(!Yii::$app->user->isGuest){
+            if(Yii::$app->user->identity->id_Yii == 1)
+            {
+                if(Consulta::find()->where(['id_paciente' =>$id])->one()){
+                    throw new UserException(Yii::t('app', 'Not possible delete user, contact developer.'));
+                }
+                //Paciente::findOne($id)->delete();
+                Contato::findOne($id)->delete();
+                Endereco::findOne($id)->delete();
+                $m = Medico::findOne($id);
+                if($m != null){
+                    $m->delete();
+                }
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            }
+            else{
+                throw new NotFoundHttpException(Yii::t('app', 'Page not found.'));
+            }
+        }
+        else{
+            return $this->redirect(['site/login']);
+        }
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Usuario::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 }
